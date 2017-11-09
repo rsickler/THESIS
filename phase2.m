@@ -1,3 +1,5 @@
+function phase2(SUBJECT,SESSION)
+
 % STARTING EXPERIMENT
 SETUP;
 
@@ -9,16 +11,17 @@ inc2_sequence = [];
 correct_u_sequence = [];
 inc1_u_sequence = [];
 inc2_u_sequence = [];
-used_variants = zeros(1,4);
-% make series of 4 bundles (each variant shown 1 time)
+used_variants = zeros(1,N_v_images);
+
+% make series of 4 bundles (each variant image shown 1 time)
 for i =1:4
     %add a variant scenario to all 4 orignals to make bundle of 5
-    ran1 = randi(2);
-    ran2 = randi(2)+2;
-    found = 0;
-    while ~found
-        if used_variants(ran1) <=2
-            if ~used_variants(ran2) <=2
+    ran1 = randi(4);
+    ran2 = 5+randi(4)-1;
+    done = 0;
+    while ~done
+        if used_variants(ran1) < 1 
+            if used_variants(ran2) < 1
                 scenario_bundle = cat(2,og_scenarios, v_scenarios(ran1));
                 scenario_bundle = cat(2,scenario_bundle, v_scenarios(ran2));
                 correct_bundle = cat(2,og_corrects, v_corrects(ran1));
@@ -33,8 +36,8 @@ for i =1:4
                 inc1_u_bundle = cat(2,inc1_u_bundle, v_inc1s_u(ran2));
                 inc2_u_bundle = cat(2,og_inc2s_u, v_inc2s_u(ran1));
                 inc2_u_bundle = cat(2,inc2_u_bundle, v_inc2s_u(ran2));
-                shuffler = randperm(6);
-                for i= 1:6
+                shuffler = randperm(10);
+                for i= 1:10
                     new_scenario_bundle(i) = scenario_bundle(shuffler(i));
                     new_correct_bundle(i) = correct_bundle(shuffler(i));
                     new_inc1_bundle(i) = inc1_bundle(shuffler(i));
@@ -50,14 +53,15 @@ for i =1:4
                 correct_u_sequence = cat(2,correct_u_sequence,new_correct_u_bundle);
                 inc1_u_sequence = cat(2,inc1_u_sequence, new_inc1_u_bundle);
                 inc2_u_sequence = cat(2,inc2_u_sequence, new_inc2_u_bundle);
-                found = 1;
+                % tally use of variants
                 used_variants(ran1) = used_variants(ran1)+1;
                 used_variants(ran2) = used_variants(ran2)+1;
+                done = 1;
             else
-                ran2 = randi(2);
+                ran2 = 5+randi(4)-1;
             end
         else
-            ran1 = randi(2);
+            ran1 = randi(4);
         end
     end
 end
@@ -93,7 +97,7 @@ for i = 1:N_images
     inc2_texture(i) = Screen('MakeTexture', mainWindow, inc2_matrix);
     correct_u_matrix = double(imread(fullfile(correct_u_Folder,correct_u_sequence{i})));
     correct_u_texture(i) = Screen('MakeTexture', mainWindow, correct_u_matrix);
-    inc1_u_matrix = double(imread(fullfile(inc1__uFolder,inc1_u_sequence{i})));
+    inc1_u_matrix = double(imread(fullfile(inc1_u_Folder,inc1_u_sequence{i})));
     inc1_u_texture(i) = Screen('MakeTexture', mainWindow, inc1_u_matrix);
     inc2_u_matrix = double(imread(fullfile(inc2_u_Folder,inc2_u_sequence{i})));
     inc2_u_texture(i) = Screen('MakeTexture', mainWindow, inc2_u_matrix);
@@ -102,7 +106,7 @@ end
 % BEGIN PHASE 2
 instruct = ['Would you like to start phase 2?' ...
     '\n\n Remember, the color of the team you are playing matters!' ...
-    '-- \n\n press "enter" to begin --'];
+    '\n\n --  press "enter" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 trigger = 'Return';
 trigger = KbName(trigger);
@@ -116,6 +120,7 @@ runStart = GetSecs;
 % set structure for reading responses
 P2_order = scenario_sequence;
 P2_response = {};
+
 % begin!
 trial = 1;
 while trial <= N_images
@@ -157,13 +162,13 @@ while trial <= N_images
             x = -x;
         end
         if this_pic(3) == 'O' % if original
-            correct_movement = (x<=-.75) && (y<=0.1);   %full diagnal line
-            inc1_movement = (y<=.1) && (x>=-.75)&&(x<=.75); %full straight
-            inc2_movement = (x>=.75) && (y<=0.1); %full diagnal cross
+            correct_movement = (x<=-.75) && (y<=-.5);   %full diagnal line
+            inc1_movement = (y<=-.5) && (x>=-.75)&&(x<=.75); %full straight
+            inc2_movement = (x>=.75) && (y<=-.5); %full diagnal cross
         else % if variant
-            correct_movement = (x>=.75) && (y<=0.1); %full diagnal cross 
-            inc1_movement = (y<=.1) && (x>=-.75)&&(x<=.75); %full straight
-            inc2_movement = (x<=-.75) && (y<=0.1);  %full diagnal line
+            correct_movement = (x>=.75) && (y<=-.5); %full diagnal cross 
+            inc1_movement = (y<=-.5) && (x>=-.75)&&(x<=.75); %full straight
+            inc2_movement = (x<=-.75) && (y<=-.5);  %full diagnal line
         end
     else %else in B
         %switch diagnal movements if antenna on right side
@@ -171,7 +176,7 @@ while trial <= N_images
             x = -x;
         end
         if this_pic(3) == 'O' % if original
-            correct_movement = (x<=-.75) && (y>=-.1) && (y<=.75); %shwype
+            correct_movement = (x<=-.75) && (y>=-.75) && (y<=.25); %shwype
             inc1_movement = (x>=-.75)&&(x<=.75) && (y>=.1) && (y<=.6); %tip ahead
             inc2_movement = (x>=.75) && (y>=-.1) && (y<=.75); %sharp cross
         else
@@ -215,7 +220,7 @@ while trial <= N_images
         end
         P2_response{trial} = 'incorrect2';
     else
-        DrawFormattedText(mainWindow,'IMPROPER RESPONSE','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        DrawFormattedText(mainWindow,'IMPROPER RESPONSE \n\n ---Remember to HOLD it!---','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
         Screen('DrawTexture', mainWindow,noresponse_texture,[0 0 NR_PICDIMS],[NR_topLeft NR_topLeft+NR_PICDIMS.*NR_RESCALE_FACTOR]);
         P2_response{trial} = 'no response';
     end
@@ -231,3 +236,17 @@ timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLA
 WaitSecs(2);
 displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
+
+%SET UP SUBJECT DATA 
+% matlab save file
+matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+data_dir = fullfile(workingDir, 'BehavioralData');
+if ~exist(data_dir,'dir'), mkdir(data_dir); end
+ppt_dir = [data_dir filesep SUBJ_NAME filesep];
+if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
+MATLAB_SAVE_FILE = [ppt_dir matlabSaveFile];
+LOG_NAME = [ppt_dir logName];
+
+
+
+end

@@ -1,0 +1,17 @@
+%SET UP SUBJECT DATA 
+SUBJECT = 1;
+SUBJ_NAME = 'Trey';
+% setting up your subject's folder
+if running
+    %workingDir = '/Users/
+else workingDir = '/Users/treysickler/Documents/MATLAB/THESIS';
+end
+
+% run
+SETUP; 
+INTRO(SUBJECT, 1);
+clear all; 
+
+phase1(SUBJECT, 2);
+
+phase2(SUBJECT, 3);

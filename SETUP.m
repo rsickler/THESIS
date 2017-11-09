@@ -1,11 +1,17 @@
-% SETTING WINDOW/DISPLAY
 % debug conditions
 debugging = true;
-joystick = false;
+joystick = true;
+running = false;
+% setting up your subject's folder
+if running
+    %workingDir = '/Users/
+else workingDir = '/Users/treysickler/Documents/MATLAB/THESIS';
+end
 DEBUG_MONITOR_SIZE = [2560 1600]/4;
-% display conditions
-AssertOpenGL;
+
+% SETTING WINDOW/DISPLAY
 DEFAULT_MONITOR_SIZE = [1024 768];
+AssertOpenGL;
 MAINFONT = 'Arial';
 MAINFONTSIZE = 30;
 KEYBOARD_TRIGGER = 'Return';
@@ -23,30 +29,13 @@ COLORS.MAINFONTCOLOR = [200 200 200];
 COLORS.BGCOLOR = [50 50 50];
 COLORS.GREEN = [0 255 0];
 COLORS.RED = [255 0 0];
-
 WRAPCHARS = 70;
+
 % default keypress handling
 device = -1;
 KbName('UnifyKeyNames');
 press = 'Return';
 trigger = KbName(press);
-workingDir = '/Users/treysickler/Documents/MATLAB/THESIS';
-
-%SET UP SUBJECT DATA
-SESSION = 1;
-SUBJECT = 1;
-SUBJ_NAME = 'Trey';
-logName = ['subj' int2str(SUBJECT) '.txt'];
-% matlab save file
-matlabSaveFile = ['SICKLERTEST_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
-
-% setting up your subject's folder
-data_dir = fullfile(workingDir, 'BehavioralData');
-if ~exist(data_dir,'dir'), mkdir(data_dir); end
-ppt_dir = [data_dir filesep SUBJ_NAME filesep];
-if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
-MATLAB_SAVE_FILE = [ppt_dir matlabSaveFile];
-LOG_NAME = [ppt_dir logName];
 
 % OPEN SCREEN
 ListenChar(2); % disables keyboard input to Matlab command window
@@ -103,6 +92,7 @@ og_scenarios = {};
 for i = 4:length(og_scenario_dir)
     og_scenarios{i-3} = og_scenario_dir(i).name;
 end
+
 og_correct_Folder = fullfile(workingDir, 'stimuli/og_correct');
 og_correct_dir = dir(fullfile(og_correct_Folder));
 og_corrects = {};
@@ -121,24 +111,29 @@ og_inc2s = {};
 for i = 4:length(og_inc2_dir)
     og_inc2s{i-3} = og_inc2_dir(i).name;
 end
+
 og_correct_u_Folder = fullfile(workingDir, 'stimuli/og_correct_u');
 og_correct_u_dir = dir(fullfile(og_correct_u_Folder));
 og_corrects_u = {};
 for i = 4:length(og_correct_u_dir)
     og_corrects_u{i-3} = og_correct_u_dir(i).name;
 end
+
 og_inc1_u_Folder = fullfile(workingDir, 'stimuli/og_inc1_u');
 og_inc1_u_dir = dir(fullfile(og_inc1_u_Folder));
 og_inc1s_u = {};
 for i = 4:length(og_inc1_u_dir)
     og_inc1s_u{i-3} = og_inc1_u_dir(i).name;
 end
+
 og_inc2_u_Folder = fullfile(workingDir, 'stimuli/og_inc2_u');
 og_inc2_u_dir = dir(fullfile(og_inc2_u_Folder));
 og_inc2s_u = {};
 for i = 4:length(og_inc2_u_dir)
     og_inc2s_u{i-3} = og_inc2_u_dir(i).name;
 end
+
+
 % create variant directories and lists
 v_scenario_Folder = fullfile(workingDir, 'stimuli/v_scenario');
 v_scenario_dir = dir(fullfile(v_scenario_Folder));

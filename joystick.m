@@ -1,11 +1,11 @@
 % Define joystick and movement variables
 ID = 1;
-joy=vrjoystick(ID);
+joy = vrjoystick(ID);
 ky=[];
 kx=[];
 
 %record movement in matrix for 2 seconds
-tEnd=GetSecs+20;
+tEnd=GetSecs+200;
 while GetSecs<tEnd 
     %find current spot
     x=axis(joy, 1);
@@ -14,7 +14,7 @@ while GetSecs<tEnd
     ky(end+1)=y;
     kx(end+1)=x;
     % Plot marker to define end of joystick
-    plot(x,y,'ro','MarkerSize',10,'MarkerFaceColor','r')
+    plot(x,y,'ro','MarkerSize',10,'MarkerFaceColor','r');
     hold on
     hold off
     % define plot axes
@@ -59,7 +59,3 @@ if (x(end)>=-.75)&& (x(end)<=.75) && (y(end)>=.75)
 else 
     fprintf('\n\n didnt move back')
 end
-
-fprintf('\n\n')
-
-correct_movement = (x<=-.75) && (y>=.1) && (y<=.6); %shwype

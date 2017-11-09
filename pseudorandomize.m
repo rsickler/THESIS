@@ -1,42 +1,63 @@
 % PSEUDO-RANDOMIZE
+SETUP; 
 all_orig = [1:N_og_images];
-used = zeros(1,N_og_images);
-nDoubles = 2;
-scenario_sequence = cell(1,N_og_images);
-correct_sequence = cell(1,N_og_images);
-inc1_sequence = cell(1,N_og_images);
-inc2_sequence = cell(1,N_og_images);
-correct_u_sequence = cell(1,N_og_images);
-inc1_u_sequence = cell(1,N_og_images);
-inc2_u_sequence = cell(1,N_og_images);
+ROUNDS = 4;
+max_sequence_rounds = 10;
+scenario_sequence = [];
+correct_sequence = [];
+inc1_sequence = [];
+inc2_sequence = [];
+correct_u_sequence = [];
+inc1_u_sequence = [];
+inc2_u_sequence = [];
 
-for T = 1:nDoubles
-    ABorder = randperm(2);
-    for i = 1:2
-        sitch = ABorder(i);  
-        TRIAL = (T-1)*2 + i;
-        start = (sitch-1)*2 + 1;
-        index = start + randi(1:2) -1;
-        found = 0;
-        while ~found
-            if ~used(index)
-                scenario_sequence{TRIAL} = og_scenarios{index};
-                correct_sequence{TRIAL} = og_corrects{index};
-                inc1_sequence{TRIAL} = og_inc1s{index};
-                inc2_sequence{TRIAL} = og_inc2s{index};
-                correct_u_sequence{TRIAL} = og_corrects_u{index};
-                inc1_u_sequence{TRIAL} = og_inc1s_u{index};
-                inc2_u_sequence{TRIAL} = og_inc2s_u{index};
-                found = 1;
-                used(index) = 1;
-            else
-                index = start + randi(2) -1;
+new_scenario_bundle = cell(1,N_og_images);
+new_correct_bundle = cell(1,N_og_images);
+new_inc1_bundle = cell(1,N_og_images);
+new_inc2_bundle = cell(1,N_og_images);
+new_correct_u_bundle = cell(1,N_og_images);
+new_inc1_u_bundle = cell(1,N_og_images);
+new_inc2_u_bundle = cell(1,N_og_images);
+
+for j = 1:max_sequence_rounds
+    used = zeros(1,N_og_images);
+    for T = 1:ROUNDS
+        ABorder = randperm(2);
+        for i = 1:2
+            sitch = ABorder(i);  
+            TRIAL = (T-1)*2 + i;
+            start = (sitch-1)*4 + 1;
+            index = start + randi(4) -1;
+            found = 0;
+            while ~found
+                if ~used(index)
+                    new_scenario_bundle{TRIAL} = og_scenarios{index};
+                    new_correct_bundle{TRIAL} = og_corrects{index};
+                    new_inc1_bundle{TRIAL} = og_inc1s{index};
+                    new_inc2_bundle{TRIAL} = og_inc2s{index};
+                    new_correct_u_bundle{TRIAL} = og_corrects_u{index};
+                    new_inc1_u_bundle{TRIAL} = og_inc1s_u{index};
+                    new_inc2_u_bundle{TRIAL} = og_inc2s_u{index};
+                    %update status
+                    found = 1;
+                    used(index) = 1;
+                else
+                    index = start + randi(4) -1;
+                end
             end
         end
     end
+    scenario_sequence = cat(2,scenario_sequence, new_scenario_bundle);
+    correct_sequence = cat(2,correct_sequence,new_correct_bundle);
+    inc1_sequence = cat(2,inc1_sequence, new_inc1_bundle);
+    inc2_sequence = cat(2,inc2_sequence, new_inc2_bundle);
+    correct_u_sequence = cat(2,correct_u_sequence,new_correct_u_bundle);
+    inc1_u_sequence = cat(2,inc1_u_sequence, new_inc1_u_bundle);
+    inc2_u_sequence = cat(2,inc2_u_sequence, new_inc2_u_bundle);
 end
+
 %make original textures in the pseudo-randomized order
-for i = 1:N_og_images
+for i = 1:N_og_images*max_sequence_rounds
     og_scenario_matrix = double(imread(fullfile(og_scenario_Folder,scenario_sequence{i})));
     og_scenario_texture(i) = Screen('MakeTexture', mainWindow, og_scenario_matrix);
     og_correct_matrix = double(imread(fullfile(og_correct_Folder,correct_sequence{i})));

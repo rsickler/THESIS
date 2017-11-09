@@ -1,13 +1,88 @@
-% STARTING EXPERIMENT
-INTRO;
+function phase2(SUBJECT,SESSION)
+
+% PSEUDO-RANDOMIZE
+SETUP; 
+all_orig = [1:N_og_images];
+ROUNDS = 4;
+max_sequence_rounds = 10;
+scenario_sequence = [];
+correct_sequence = [];
+inc1_sequence = [];
+inc2_sequence = [];
+correct_u_sequence = [];
+inc1_u_sequence = [];
+inc2_u_sequence = [];
+
+new_scenario_bundle = cell(1,N_og_images);
+new_correct_bundle = cell(1,N_og_images);
+new_inc1_bundle = cell(1,N_og_images);
+new_inc2_bundle = cell(1,N_og_images);
+new_correct_u_bundle = cell(1,N_og_images);
+new_inc1_u_bundle = cell(1,N_og_images);
+new_inc2_u_bundle = cell(1,N_og_images);
+
+for j = 1:max_sequence_rounds
+    used = zeros(1,N_og_images);
+    for T = 1:ROUNDS
+        ABorder = randperm(2);
+        for i = 1:2
+            sitch = ABorder(i);  
+            TRIAL = (T-1)*2 + i;
+            start = (sitch-1)*4 + 1;
+            index = start + randi(4) -1;
+            found = 0;
+            while ~found
+                if ~used(index)
+                    new_scenario_bundle{TRIAL} = og_scenarios{index};
+                    new_correct_bundle{TRIAL} = og_corrects{index};
+                    new_inc1_bundle{TRIAL} = og_inc1s{index};
+                    new_inc2_bundle{TRIAL} = og_inc2s{index};
+                    new_correct_u_bundle{TRIAL} = og_corrects_u{index};
+                    new_inc1_u_bundle{TRIAL} = og_inc1s_u{index};
+                    new_inc2_u_bundle{TRIAL} = og_inc2s_u{index};
+                    %update status
+                    found = 1;
+                    used(index) = 1;
+                else
+                    index = start + randi(4) -1;
+                end
+            end
+        end
+    end
+    scenario_sequence = cat(2,scenario_sequence, new_scenario_bundle);
+    correct_sequence = cat(2,correct_sequence,new_correct_bundle);
+    inc1_sequence = cat(2,inc1_sequence, new_inc1_bundle);
+    inc2_sequence = cat(2,inc2_sequence, new_inc2_bundle);
+    correct_u_sequence = cat(2,correct_u_sequence,new_correct_u_bundle);
+    inc1_u_sequence = cat(2,inc1_u_sequence, new_inc1_u_bundle);
+    inc2_u_sequence = cat(2,inc2_u_sequence, new_inc2_u_bundle);
+end
+
+%make original textures in the pseudo-randomized order
+for i = 1:N_og_images*max_sequence_rounds
+    og_scenario_matrix = double(imread(fullfile(og_scenario_Folder,scenario_sequence{i})));
+    og_scenario_texture(i) = Screen('MakeTexture', mainWindow, og_scenario_matrix);
+    og_correct_matrix = double(imread(fullfile(og_correct_Folder,correct_sequence{i})));
+    og_correct_texture(i) = Screen('MakeTexture', mainWindow, og_correct_matrix);
+    og_inc1_matrix = double(imread(fullfile(og_inc1_Folder,inc1_sequence{i})));
+    og_inc1_texture(i) = Screen('MakeTexture', mainWindow, og_inc1_matrix);
+    og_inc2_matrix = double(imread(fullfile(og_inc2_Folder,inc2_sequence{i})));
+    og_inc2_texture(i) = Screen('MakeTexture', mainWindow, og_inc2_matrix);
+    og_correct_u_matrix = double(imread(fullfile(og_correct_u_Folder,correct_u_sequence{i})));
+    og_correct_u_texture(i) = Screen('MakeTexture', mainWindow, og_correct_u_matrix);
+    og_inc1_u_matrix = double(imread(fullfile(og_inc1_u_Folder,inc1_u_sequence{i})));
+    og_inc1_u_texture(i) = Screen('MakeTexture', mainWindow, og_inc1_u_matrix);
+    og_inc2_u_matrix = double(imread(fullfile(og_inc2_u_Folder,inc2_u_sequence{i})));
+    og_inc2_u_texture(i) = Screen('MakeTexture', mainWindow, og_inc2_u_matrix);
+end
+
+
+% ----BEGIN PHASE 1 ----
 instruct = ['Would you like to begin the experiment?'...
     '\n\n\n\n -- press "enter" to continue --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p1StartTime = waitForKeyboard(trigger,device);
 
-%BEGIN PHASE 1
-% PSEUDO-RANDOMIZE
-pseudorandomize;
 %set up phase 1 specific timings
 config.nTrials = N_og_images;
 config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go +config.nTRs.feedback;
@@ -25,9 +100,12 @@ Acorrect_trials = 0;
 Bcorrect_trials = 0;
 Aratio = 0;
 Bratio = 0;
-min_trials = config.nTrials * 3;
+min_trials = 32;
+max_trials = 80; 
+
+% RUN TRIALS
 %loop through until accuracies for both are met
-while ((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)
+while (((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)) && trial < max_trials
     %store current image in structure
     P1_order{trial} = scenario_sequence{picnumber};
     % calculate all future onsets
@@ -68,29 +146,29 @@ while ((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)
         if this_pic(2) == 'R'
             x = -x;
         end
-        correct_movement = (x<=-.75) && (y<=0.1);   %full diagnal line
-        inc1_movement = (y<=.1) && (x>=-.75)&&(x<=.75); %full straight
-        inc2_movement = (x>=.75) && (y<=0.1); %full diagnal cross
+        correct_movement = (x<=-.75) && (y<=-.75);   %full diagnal line
+        inc1_movement = (y<=-.5) && (x>=-.75)&&(x<=.75); %full straight
+        inc2_movement = (x>=.75) && (y<=-.75); %full diagnal cross
     else
         Btrials = Btrials+1;
         %switch diagnal movements if antenna on right side
         if this_pic(2) == 'R'
             x = -x;
         end
-        correct_movement = (x<=-.75) && (y>=-.1) && (y<=.75); %shwype
-        inc1_movement = (x>=-.75)&&(x<=.75) && (y>=.1) && (y<=.6); %tip ahead
-        inc2_movement = (x>=.75) && (y>=-.1) && (y<=.75); %sharp cross
+        correct_movement = (x<=-.75) && (y>=-.75) && (y<=.25); %shwype
+        inc1_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
+        inc2_movement = (x>=.75) && (y>=-.75) && (y<=.25); %sharp cross
     end
     luck = rand;
     if correct_movement
         if luck > .2
-            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_correct_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
         else
-            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
             DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_correct_u_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
         end
         if this_pic(1) == 'A'
             Acorrect_trials = Acorrect_trials+1;
@@ -99,30 +177,30 @@ while ((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)
         P1_response{trial} = 'correct';
     elseif inc1_movement
         if luck < .2
-            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_inc1_u_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
         else
-            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
             DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_inc1_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
         end
         P1_response{trial} = 'incorrect1';
     elseif inc2_movement
         if luck < .2
-            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_inc2_u_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
         else
-            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
             DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_inc2_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
         end
         P1_response{trial} = 'incorrect2';
     else
-        DrawFormattedText(mainWindow,'IMPROPER RESPONSE','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        DrawFormattedText(mainWindow,'IMPROPER RESPONSE \n\n ---Remember to HOLD it!---','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
         Screen('DrawTexture', mainWindow,noresponse_texture,[0 0 NR_PICDIMS],[NR_topLeft NR_topLeft+NR_PICDIMS.*NR_RESCALE_FACTOR]);
-        P1_response{trial} = 'no response';
+        P1_response{trial} = 'improp response';
     end
     timing.actualOnsets.feedback(trial) = Screen('Flip',mainWindow,timespec);
     % update counts
@@ -144,10 +222,25 @@ while ((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)
     end
     trial = trial + 1;
 end
+
 % throw up a final ITI
 timing.plannedOnsets.lastITI = timing.plannedOnsets.feedback(end) + config.nTRs.feedback*config.TR;
 timespec = timing.plannedOnsets.lastITI-slack;
 timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
 WaitSecs(2);
-displayText(mainWindow,'80% accuracy achieved! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+displayText(mainWindow,'80% accuracy achieved! Hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
+
+%SET UP SUBJECT DATA 
+% matlab save file
+matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+data_dir = fullfile(workingDir, 'BehavioralData');
+if ~exist(data_dir,'dir'), mkdir(data_dir); end
+ppt_dir = [data_dir filesep SUBJ_NAME filesep];
+if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
+MATLAB_SAVE_FILE = [ppt_dir matlabSaveFile];
+LOG_NAME = [ppt_dir logName];
+
+save(matlabSaveFile, 'stim', 'timing');  
+
+end

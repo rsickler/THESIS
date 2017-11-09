@@ -87,7 +87,6 @@ Screen('Flip',mainWindow, INSTANT);
 intro_press5 = waitForKeyboard(trigger,device);
 
 %JOYSTICK TRAINING
-SETUP; 
 oneTest_matrix = double(imread(fullfile(otherFolder,'oneTest.jpeg')));
 oneTest_texture = Screen('MakeTexture', mainWindow, oneTest_matrix);
 twoTest_matrix = double(imread(fullfile(otherFolder,'twoTest.jpeg')));
@@ -119,7 +118,7 @@ while ~done
         y=axis(joy, 2);
         pause(.05)
     end
-    goal = (x<=-.75) && (y<=0.1); %full diagnal line
+    goal = (x<=-.75) && (y<=0.5); %full diagnal line
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -147,7 +146,7 @@ while ~done
         y=axis(joy, 2);
         pause(.05)
     end
-    goal = (y<=.1) && (x>=-.75)&&(x<=.75); %full straight
+    goal = (y<=-.5) && (x>=-.75)&&(x<=.75); %full straight
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -176,7 +175,7 @@ while ~done
         y=axis(joy, 2);
         pause(.05)
     end
-    goal = (x>=.75) && (y<=0.1); %full diagnal cross
+    goal = (x>=.75) && (y<=0.5); %full diagnal cross
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -205,7 +204,7 @@ while ~done
         y=axis(joy, 2);
         pause(.05)
     end
-    goal = (x<=-.75) && (y>=-.1) && (y<=.75); %shwype
+    goal = (x<=-.75) && (y>=-.75) && (y<=0); %shwype
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -234,7 +233,7 @@ while ~done
         y=axis(joy, 2);
         pause(.05)
     end
-    goal = (x>=-.75)&&(x<=.75) && (y>=.1) && (y<=.6); %tip ahead
+    goal = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -263,7 +262,7 @@ while ~done
         y=axis(joy, 2);
         pause(.05)
     end
-    goal = (x>=.75) && (y>=-.1) && (y<=.75); %sharp cross
+    goal = (x>=.75) && (y>=-.75) && (y<=0); %sharp cross
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -274,3 +273,7 @@ while ~done
     end
 end
 WaitSecs(2);
+
+%make sure they actually did it
+matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+end

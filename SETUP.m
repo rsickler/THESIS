@@ -1,10 +1,10 @@
 % debug conditions
 debugging = true;
 joystick = true;
-running = false;
+running = true;
 % setting up your subject's folder
 if running
-    %workingDir = '/Users/
+    workingDir = '/Users/norman_lab/THESIS';
 else workingDir = '/Users/treysickler/Documents/MATLAB/THESIS';
 end
 DEBUG_MONITOR_SIZE = [2560 1600]/4;
@@ -14,8 +14,9 @@ DEFAULT_MONITOR_SIZE = [1024 768];
 AssertOpenGL;
 MAINFONT = 'Arial';
 MAINFONTSIZE = 30;
-KEYBOARD_TRIGGER = 'Return';
-SCAN_TRIGGER = '='; % skyra PST
+trigger = 'Return';
+trigger = KbName(trigger);
+scan_trigger = '='; % skyra PST
 subjectDir = [];
 fmri = 0;
 % seed
@@ -187,6 +188,8 @@ noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpeg')));
 noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 % GETTING INPUT FROM PERSON
+SESSION = 1;
+SUBJECT = 1;
 stim.session = SESSION;
 stim.subject = SUBJECT;
 stim.num_realtime = 10;

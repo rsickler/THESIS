@@ -1,7 +1,9 @@
-function phase2(SUBJECT,SESSION)
+function phase1(SUBJECT,SESSION)
+
+% STARTING EXPERIMENT
+SETUP; 
 
 % PSEUDO-RANDOMIZE
-SETUP; 
 all_orig = [1:N_og_images];
 ROUNDS = 4;
 max_sequence_rounds = 10;
@@ -239,8 +241,8 @@ if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 MATLAB_SAVE_FILE = [ppt_dir matlabSaveFile];
-LOG_NAME = [ppt_dir logName];
 
 save(matlabSaveFile, 'stim', 'timing');  
+
 
 end

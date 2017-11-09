@@ -1,7 +1,8 @@
+function INTRO(SUBJECT,SESSION)
+
 %SETUP 
 SETUP; 
-trigger = 'Return';
-trigger = KbName(trigger);
+
 %loading intro photos
 otherFolder = fullfile(workingDir, 'stimuli/other');
 oneBlocker_matrix = double(imread(fullfile(otherFolder,'oneBlocker.jpeg')));
@@ -276,4 +277,12 @@ WaitSecs(2);
 
 %make sure they actually did it
 matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+data_dir = fullfile(workingDir, 'BehavioralData');
+if ~exist(data_dir,'dir'), mkdir(data_dir); end
+ppt_dir = [data_dir filesep SUBJ_NAME filesep];
+if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
+MATLAB_SAVE_FILE = [ppt_dir matlabSaveFile];
+
+save(matlabSaveFile, 'stim', 'timing');  
+
 end

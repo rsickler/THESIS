@@ -108,8 +108,6 @@ instruct = ['Would you like to start phase 2?' ...
     '\n\n Remember, the color of the team you are playing matters!' ...
     '\n\n --  press "enter" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-trigger = 'Return';
-trigger = KbName(trigger);
 stim.p2StartTime = waitForKeyboard(trigger,device);
 
 %set up phase 2 timing changes
@@ -245,8 +243,8 @@ if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 MATLAB_SAVE_FILE = [ppt_dir matlabSaveFile];
-LOG_NAME = [ppt_dir logName];
 
+save(matlabSaveFile, 'stim', 'timing');  
 
 
 end

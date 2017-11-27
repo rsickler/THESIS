@@ -1,7 +1,7 @@
 % debug conditions
 debugging = true;
-joystick = true;
-running = true;
+joystick = false;
+running = false;
 % setting up your subject's folder
 if running
     workingDir = '/Users/norman_lab/THESIS';
@@ -188,8 +188,6 @@ noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpeg')));
 noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 % GETTING INPUT FROM PERSON
-SESSION = 1;
-SUBJECT = 1;
 stim.session = SESSION;
 stim.subject = SUBJECT;
 stim.num_realtime = 10;

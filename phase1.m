@@ -1,3 +1,5 @@
+%%% phase 1 is introduction to originals until 80% accuracy or max exposure. 
+
 function phase1(SUBJECT,SESSION)
 
 % STARTING EXPERIMENT
@@ -93,8 +95,8 @@ runStart = GetSecs;
 % create structure for storing responses
 P1_order = {};
 P1_response = {};
+P1_luck = {};
 %initiate variables
-picnumber = 1;
 trial = 1;
 Atrials =0;
 Btrials =0;
@@ -106,10 +108,10 @@ min_trials = 32;
 max_trials = 80; 
 
 % RUN TRIALS
-%loop through until accuracies for both are met
-while (((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)) && trial < max_trials
+%loop through until trial number and trial accuracies for both are met
+while (trial <= max_trials)
     %store current image in structure
-    P1_order{trial} = scenario_sequence{picnumber};
+    P1_order{trial} = scenario_sequence{trial};
     % calculate all future onsets
     timing.plannedOnsets.preITI(trial) = runStart;
     if trial > 1
@@ -141,7 +143,7 @@ while (((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)) && trial < max_
         pause(.05)
     end
     %set correct movements according to if in in A or B
-    this_pic = scenario_sequence{picnumber};
+    this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'
         Atrials = Atrials+1;
         %switch diagnal movements if antenna on right side
@@ -167,10 +169,12 @@ while (((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)) && trial < max_
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_correct_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+            P1_luck{trial} = 1; 
         else
             DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_correct_u_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+            P1_luck{trial} = 0; 
         end
         if this_pic(1) == 'A'
             Acorrect_trials = Acorrect_trials+1;
@@ -182,10 +186,12 @@ while (((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)) && trial < max_
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_inc1_u_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+            P1_luck{trial} = 1;
         else
             DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_inc1_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+            P1_luck{trial} = 0;
         end
         P1_response{trial} = 'incorrect1';
     elseif inc2_movement
@@ -193,34 +199,29 @@ while (((Aratio < .8) || (Bratio < .8)) || (trial < min_trials)) && trial < max_
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_inc2_u_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+            P1_luck{trial} = 1;
         else
             DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
             Screen('DrawTexture', mainWindow, og_inc2_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+            P1_luck{trial} = 0;
         end
         P1_response{trial} = 'incorrect2';
     else
         DrawFormattedText(mainWindow,'IMPROPER RESPONSE \n\n ---Remember to HOLD it!---','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
         Screen('DrawTexture', mainWindow,noresponse_texture,[0 0 NR_PICDIMS],[NR_topLeft NR_topLeft+NR_PICDIMS.*NR_RESCALE_FACTOR]);
         P1_response{trial} = 'improp response';
+        P1_luck{trial} = -1;
     end
     timing.actualOnsets.feedback(trial) = Screen('Flip',mainWindow,timespec);
-    % update counts
-    picnumber = picnumber +1;
-    % at end of  trial cycle, check accuracy and re-cycle through if needed
-    if ~mod(trial,config.nTrials)
-        %calculate ratios
-        Aratio = Acorrect_trials / Atrials;
-        Bratio = Bcorrect_trials / Btrials;
-        %if either ratio is too low, reshuffle for another run through
-        if (Aratio < .8) || (Bratio < .8)
-            picnumber = 1;
-            pseudorandomize;
-        end
-        %if both are good, have final feedback stay up on screen
-        if (Aratio > .8) && (Bratio > .8)
-            WaitSecs(2);
-        end
+    
+    % at end of each trial, check accuracy
+    Aratio = Acorrect_trials / Atrials;
+    Bratio = Bcorrect_trials / Btrials;
+    %if both are good, and met minumum trial count, end loop!
+    if (Aratio > .8) && (Bratio > .8) && (trial > min_trials)
+        WaitSecs(2);
+        break
     end
     trial = trial + 1;
 end
@@ -240,9 +241,7 @@ data_dir = fullfile(workingDir, 'BehavioralData');
 if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
-MATLAB_SAVE_FILE = [ppt_dir matlabSaveFile];
 
-save(matlabSaveFile, 'stim', 'timing');  
-
-
+save(matlabSaveFile,'SUBJ_NAME','stim', 'timing','trial','P1_order',...
+    'P1_response', 'P1_luck','Atrials','Btrials','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
 end

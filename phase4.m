@@ -1,6 +1,14 @@
-% STARTING EXPERIMENT
+%%% Code for the final testing phase for all subject groups, in which
+%%% subejects are tested on original and variants at even ratios and
+%%% WITHOUT feedback. 
+
+function phase4(SUBJECT,SESSION)
+
 SETUP;
+
 % PSEUDO-RANDOMIZE
+% here, we want to make blocks of 8 that include all 8 images. 
+
 %pseudorandomize all originals and variants
 all_scenarios =  cat(2,og_scenarios, v_scenarios);
 all_corrects = cat(2,og_corrects, v_corrects);
@@ -63,23 +71,23 @@ for i = 1:N_images
     inc2_texture(i) = Screen('MakeTexture', mainWindow, inc2_matrix);
 end
 
-%BEGIN PHASE 3
-% give instructions, wait to begin
-instruct = ['Would you like to start phase 4?' ...
-    '\n\n-- press "enter" to begin --'];
-displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-stim.p3StartTime = waitForKeyboard(trigger,device);
-
 % create structure for storing responses
 P4_order = scenario_sequence;
 P4_response = {};
-%set up specific timing changes (exclude feedback)
+%set up specific timing changes (***EXLCUDE FEEDBACK)
 config.nTrials = N_images;
 config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go;
 config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
-runStart = GetSecs;
 
-%begin!
+%BEGIN PHASE 4
+% give cue, wait to begin
+instruct = ['Would you like to start phase 4?' ...
+    '\n\n-- press "enter" to begin --'];
+displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+stim.p4StartTime = waitForKeyboard(trigger,device);
+
+%begin! (***EXLCUDE FEEDBACK)
+runStart = GetSecs;
 trial = 1;
 while trial <= N_images
     % calculate all future onsets
@@ -159,3 +167,5 @@ timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLA
 WaitSecs(2);
 displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
+
+end

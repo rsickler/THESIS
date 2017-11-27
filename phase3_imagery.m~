@@ -1,29 +1,36 @@
+%%% This code is for the phase 3 NONDIRECTED visualization session in the
+%%% scanner, with even ratio of original:variant and feedback given.
+
+function phase3_imagery(SUBJECT,SESSION)
+
+
 SETUP; 
 % make vividness texture
 otherFolder = fullfile(workingDir, 'stimuli/other');
 vividness_matrix = double(imread(fullfile(otherFolder,'vividness.jpg')));
 vividness_texture = Screen('MakeTexture', mainWindow, vividness_matrix);
-%set display conditions
 v_PICDIMS = [750 558];
 v_picRow = CENTER(2);
 v_pic_size = windowSize.pixels*.75;
 v_RESCALE_FACTOR = v_pic_size./v_PICDIMS;
 v_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (v_PICDIMS(HORIZONTAL)*v_RESCALE_FACTOR(HORIZONTAL))/2;
 v_topLeft(VERTICAL) = v_picRow - (v_PICDIMS(VERTICAL)*v_RESCALE_FACTOR(VERTICAL))/2;
+
+%set display conditions
 scenario_textRow = windowSize.pixels(2) *(.4);
 color_textRow = windowSize.pixels(2) *(.6);
+
 %set button presses to for feedback
 UNO = '1'; 
 DOS= '2';
 TRES = '3';
 CUATRO = '4';
 CINCO = '5';
-fingers = [UNO, DOS TRES CUATRO CINCO];
+keys = [UNO, DOS TRES CUATRO CINCO];
 keyCell = [UNO, DOS TRES CUATRO CINCO];
-allkeys = fingers;
+allkeys = keys;
 
 % this records the subject's response at every trial
-
 
 
 %randomize scenario presentation
@@ -74,15 +81,22 @@ config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go 
 config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
 runStart = GetSecs;
 
-% give instructions, wait to begin
+% GIVE INTRO
+%explanation of task 
+
+
+%explain visualization rating
+
+
+%prompt for beginning
 instruct = ['Would you like to start?' ...
     '\n\n-- press "enter" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p3StartTime = waitForKeyboard(trigger,device);
-%show them visualization rating so they know what it says
 
 
-%present scenarios!
+
+%PRESENT NON-DIRECTED, FEEDBACK IMAGERY SCENARIOS
 trial = 1;
 while trial <= trial_count
     % calculate all future onsets
@@ -101,15 +115,15 @@ while trial <= trial_count
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'
         if this_pic(2) == 'O'
-            instruct = 'SINGLE BLOCKER \n\n WHITE TEAM \n\n HIT LINE';
+            instruct = 'SINGLE BLOCKER \n\n WHITE TEAM';
         else
-            instruct = 'SINGLE BLOCKER \n\n BLACK TEAM \n\n HIT CROSS';
+            instruct = 'SINGLE BLOCKER \n\n BLACK TEAM';
         end
     else
         if this_pic(2) == 'O'
-            instruct = 'DOUBLE BLOCKER \n\n ORANGE TEAM \n\n TOOL OFF BLOCK';
+            instruct = 'DOUBLE BLOCKER \n\n ORANGE TEAM';
         else
-            instruct = 'DOUBLE BLOCKER \n\n GREY TEAM \n\n TIP OVER BLOCK';
+            instruct = 'DOUBLE BLOCKER \n\n GREY TEAM';
         end
     end
     timespec = timing.plannedOnsets.scenario(trial)-slack;
@@ -123,6 +137,16 @@ while trial <= trial_count
     timing.actualOnsets.vividness(trial) = Screen('Flip',mainWindow,timespec);
     %record vividness input
 
+    %---4 secs to decide---
+    
+    %where did you imagine hitting? 
+    
+    %---4 secs to say---
+
+    %feedback on decision (+1, or +0 (for wrong, and for non-response)
+    
+    %---2 secs on feedback---
+    
     
     %update trial
     trial= trial+1;
@@ -135,3 +159,6 @@ timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.MAI
 WaitSecs(2);
 displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
+
+
+end

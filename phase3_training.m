@@ -1,5 +1,23 @@
+%%% phase 3 (in scanner) is continued training of variants and originals together,
+%%% but this time at even ratios. This version has feedback.
+
+function phase3_training(SUBJECT,SESSION)
+
 % STARTING EXPERIMENT
 SETUP;
+
+
+%alter timing to parallel imagery sessions timescale
+stim.isiDuration = 8*SPEED;
+stim.scenarioDuration = 4*SPEED;
+stim.goDuration = 4*SPEED;
+stim.feedbackDuration = 2*SPEED;
+config.TR = stim.TRlength;
+config.nTRs.ISI = stim.isiDuration/stim.TRlength;
+config.nTRs.scenario = stim.scenarioDuration/stim.TRlength;
+config.nTRs.go = stim.goDuration/stim.TRlength;
+config.nTRs.feedback = stim.feedbackDuration/stim.TRlength;
+
 
 % PSEUDO-RANDOMIZE
 %pseudorandomize all originals and variants for current sweep
@@ -80,7 +98,7 @@ for i = 1:N_images
     inc2_texture(i) = Screen('MakeTexture', mainWindow, inc2_matrix);
     correct_u_matrix = double(imread(fullfile(correct_u_Folder,correct_u_sequence{i})));
     correct_u_texture(i) = Screen('MakeTexture', mainWindow, correct_u_matrix);
-    inc1_u_matrix = double(imread(fullfile(inc1__uFolder,inc1_u_sequence{i})));
+    inc1_u_matrix = double(imread(fullfile(inc1_u_Folder,inc1_u_sequence{i})));
     inc1_u_texture(i) = Screen('MakeTexture', mainWindow, inc1_u_matrix);
     inc2_u_matrix = double(imread(fullfile(inc2_u_Folder,inc2_u_sequence{i})));
     inc2_u_texture(i) = Screen('MakeTexture', mainWindow, inc2_u_matrix);
@@ -95,9 +113,9 @@ stim.p3StartTime = waitForKeyboard(trigger,device);
 % create structure for storing responses
 P3_order = scenario_sequence;
 P3_response = {};
-%set up specific timing changes (exclude feedback)
+%set up phase 2 timing changes
 config.nTrials = N_images;
-config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go;
+config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go +config.nTRs.feedback;
 config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
 runStart = GetSecs;
 %begin!
@@ -110,17 +128,20 @@ while trial <= N_images
     end
     timing.plannedOnsets.scenario(trial) = timing.plannedOnsets.preITI(trial) + config.nTRs.ISI*config.TR;
     timing.plannedOnsets.go(trial) = timing.plannedOnsets.scenario(trial) + config.nTRs.scenario*config.TR;
+    timing.plannedOnsets.feedback(trial) = timing.plannedOnsets.go(trial) + config.nTRs.go*config.TR;
     % throw up the images
     % pre ITI
     timespec = timing.plannedOnsets.preITI(trial)-slack;
-    timing.actualOnsets.preITI(trial) = start_time_func(mainWindow,'+','center',COLORS.BLACK,WRAPCHARS,timespec);    
+    timing.actualOnsets.preITI(trial) = start_time_func(mainWindow,'+','center',COLORS.BLACK,WRAPCHARS,timespec);
     % scenario
     timespec = timing.plannedOnsets.scenario(trial)-slack;
     Screen('DrawTexture', mainWindow, scenario_texture(trial), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
     timing.actualOnsets.scenario(trial) = Screen('Flip',mainWindow,timespec);
     % go
     timespec = timing.plannedOnsets.go(trial)-slack;
-    timing.actualOnsets.go(trial) = start_time_func(mainWindow,'GO!','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);    
+    timing.actualOnsets.go(trial) = start_time_func(mainWindow,'GO!','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
+    %feedback
+    timespec = timing.plannedOnsets.feedback(trial)-slack;
     %record trajectory
     tEnd=GetSecs+2;
     while GetSecs<tEnd
@@ -159,19 +180,50 @@ while trial <= N_images
             correct_movement = (x>=-.75)&&(x<=.75) && (y>=.1) && (y<=.6); %tip ahead
             inc1_movement = (x<=-.75) && (y>=-.1) && (y<=.75); %shwype
             inc2_movement = (x>=.75) && (y>=-.1) && (y<=.75); %sharp cross
-        end        
+        end
     end
+    luck = rand;
     if correct_movement
-        P4_response{trial} = 'correct';
+        if luck > .2
+            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
+            DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+            Screen('DrawTexture', mainWindow, correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        else
+            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
+            DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+            Screen('DrawTexture', mainWindow, correct_u_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        end
+        P3_response{trial} = 'correct';
     elseif inc1_movement
-        P4_response{trial} = 'incorrect1';
+        if luck < .2
+            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
+            DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+            Screen('DrawTexture', mainWindow, inc1_u_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        else
+            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
+            DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+            Screen('DrawTexture', mainWindow, inc1_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        end
+        P3_response{trial} = 'incorrect1';
     elseif inc2_movement
-        P4_response{trial} = 'incorrect2';
+        if luck < .2
+            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
+            DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+            Screen('DrawTexture', mainWindow, inc2_u_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        else
+            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
+            DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+            Screen('DrawTexture', mainWindow, inc2_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        end
+        P3_response{trial} = 'incorrect2';
     else
-        P4_response{trial} = 'no response';
+        DrawFormattedText(mainWindow,'IMPROPER RESPONSE','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow,noresponse_texture,[0 0 NR_PICDIMS],[NR_topLeft NR_topLeft+NR_PICDIMS.*NR_RESCALE_FACTOR]);
+        P3_response{trial} = 'no response';
     end
+    timing.actualOnsets.feedback(trial) = Screen('Flip',mainWindow,timespec);
     %update trial
-    trial= trial+1; 
+    trial= trial+1;
 end
 % throw up a final ITI
 timing.plannedOnsets.lastITI = timing.plannedOnsets.feedback(end) + config.nTRs.feedback*config.TR;
@@ -180,3 +232,11 @@ timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLA
 WaitSecs(2);
 displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
+
+
+
+
+
+
+
+end

@@ -7,87 +7,62 @@ function phase4(SUBJECT,SESSION)
 SETUP;
 
 % PSEUDO-RANDOMIZE
-% here, we want to make blocks of 8 that include all 8 images. 
-
-%pseudorandomize all originals and variants
+%pseudorandomize all originals and variants in blocks of 4, using all 16
+% images twice each
 all_scenarios =  cat(2,og_scenarios, v_scenarios);
-all_corrects = cat(2,og_corrects, v_corrects);
-all_inc1s = cat(2,og_inc1s, v_inc1s);
-all_inc2s = cat(2,og_inc2s, v_inc2s);
 used = zeros(1,length(all_scenarios));
 scenario_sequence = [];
-correct_sequence = [];
-inc1_sequence = [];
-inc2_sequence = [];
-nQuads = 6;
+
+nQuads = 8;
 for T = 1:nQuads
     ORDER = randperm(4);
     for i = 1:4
-        sitch = ORDER(i);  
+        sitch = ORDER(i);
         TRIAL = (T-1)*4 + i;
-        start = (sitch-1)*2 + 1;
-        index = start + randi(1:2) -1;
+        start = (sitch-1)*4 + 1;
+        index = start + randi(4) -1;
         found = 0;
         while ~found
             if ~used(index)
                 scenario_sequence{TRIAL} = all_scenarios{index};
-                correct_sequence{TRIAL} = all_corrects{index};
-                inc1_sequence{TRIAL} = all_inc1s{index};
-                inc2_sequence{TRIAL} = all_inc2s{index};
                 found = 1;
                 used(index) = 1;
             else
-                index = start + randi(2) -1;
-                done = all(used);
-                if done
+                index = start + randi(4) -1;
+                if all(used)
                     used = zeros(1,length(all_scenarios));
                 end
             end
         end
     end
 end
-%make textures in the pseudo-randomized order
+
+%make SCENARIO TEXTURES ONLY in the pseudo-randomized order
 N_images = length(scenario_sequence);
 for i = 1:N_images
     current = scenario_sequence{i};
     if current(3) == 'O'
         scenario_Folder = og_scenario_Folder;
-        correct_Folder = og_correct_Folder;
-        inc1_Folder = og_inc1_Folder;
-        inc2_Folder = og_inc2_Folder;
     else
         scenario_Folder = v_scenario_Folder;
-        correct_Folder = v_correct_Folder;
-        inc1_Folder = v_inc1_Folder;
-        inc2_Folder = v_inc2_Folder;
     end
     scenario_matrix = double(imread(fullfile(scenario_Folder,scenario_sequence{i})));
     scenario_texture(i) = Screen('MakeTexture', mainWindow, scenario_matrix);
-    correct_matrix = double(imread(fullfile(correct_Folder,correct_sequence{i})));
-    correct_texture(i) = Screen('MakeTexture', mainWindow, correct_matrix);
-    inc1_matrix = double(imread(fullfile(inc1_Folder,inc1_sequence{i})));
-    inc1_texture(i) = Screen('MakeTexture', mainWindow, inc1_matrix);
-    inc2_matrix = double(imread(fullfile(inc2_Folder,inc2_sequence{i})));
-    inc2_texture(i) = Screen('MakeTexture', mainWindow, inc2_matrix);
 end
 
-% create structure for storing responses
-P4_order = scenario_sequence;
-P4_response = {};
-%set up specific timing changes (***EXLCUDE FEEDBACK)
+%make phase 4 timing changes(***EXLCUDE FEEDBACK)
 config.nTrials = N_images;
 config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go;
 config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
+runStart = GetSecs;
 
-%BEGIN PHASE 4
 % give cue, wait to begin
-instruct = ['Would you like to start phase 4?' ...
+instruct = ['Would you like to start?' ...
     '\n\n-- press "enter" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p4StartTime = waitForKeyboard(trigger,device);
 
-%begin! (***EXLCUDE FEEDBACK)
-runStart = GetSecs;
+% BEGIN PHASE 4 TRIALS
 trial = 1;
 while trial <= N_images
     % calculate all future onsets
@@ -120,6 +95,7 @@ while trial <= N_images
     %set correct movements according to if in in A, B, A',B'
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'
+        Atrials = Atrials+1;
         %switch diagnal movements if antenna on right side
         if this_pic(2) == 'R'
             x = -x;
@@ -134,6 +110,7 @@ while trial <= N_images
             inc2_movement = (x<=-.75) && (y<=0.1);  %full diagnal line
         end
     else %else in B
+        Btrials = Btrials+1;
         %switch diagnal movements if antenna on right side
         if this_pic(2) == 'R'
             x = -x;
@@ -150,15 +127,19 @@ while trial <= N_images
     end
     if correct_movement
         P4_response{trial} = 'correct';
+        if this_pic(1) == 'A'
+            Acorrect_trials = Acorrect_trials+1;
+        else Bcorrect_trials = Bcorrect_trials+1;
+        end
     elseif inc1_movement
         P4_response{trial} = 'incorrect1';
     elseif inc2_movement
         P4_response{trial} = 'incorrect2';
     else
-        P4_response{trial} = 'no response';
+        P4_response{trial} = 'improp response';
     end
     %update trial
-    trial= trial+1; 
+    trial= trial+1;
 end
 % throw up a final ITI
 timing.plannedOnsets.lastITI = timing.plannedOnsets.feedback(end) + config.nTRs.feedback*config.TR;
@@ -167,5 +148,21 @@ timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLA
 WaitSecs(2);
 displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
+
+
+%SET UP SUBJECT DATA 
+% matlab save file
+matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+data_dir = fullfile(workingDir, 'BehavioralData');
+if ~exist(data_dir,'dir'), mkdir(data_dir); end
+ppt_dir = [data_dir filesep SUBJ_NAME filesep];
+if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
+
+total_trials = trial - 1; 
+Aratio = Acorrect_trials / Atrials;
+Bratio = Bcorrect_trials / Btrials;
+
+save(matlabSaveFile, 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
+    'P3_order','P3_response','P3_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
 
 end

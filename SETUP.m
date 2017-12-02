@@ -188,6 +188,10 @@ noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpeg')));
 noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 % GETTING INPUT FROM PERSON
+if debugging
+    SESSION = 1; 
+    SUBJECT = 1;
+end
 stim.session = SESSION;
 stim.subject = SUBJECT;
 stim.num_realtime = 10;

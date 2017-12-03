@@ -300,4 +300,10 @@ if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 total_time = GetSecs - start_time;
 save(matlabSaveFile,'SUBJ_NAME','instruct_time', 'train_time','total_time',...
     'intro_press1','intro_press2','intro_press3','intro_press4','intro_press5');  
+
+instruct = ['That completes the tutorial! You may now take a brief break before phase one. Press enter when you are ready to continue.' ...
+    '\n\n\n\n -- press "enter" to continue --'];
+DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('Flip',mainWindow, INSTANT);
+end_press = waitForKeyboard(trigger,device);
 end

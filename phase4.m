@@ -4,7 +4,10 @@
 
 function phase4(SUBJECT,SUBJ_NAME,SESSION)
 
-SETUP;
+% STARTING EXPERIMENT
+SETUP; 
+instruct = 'Loading Phase 4...';
+displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
 % PSEUDO-RANDOMIZE
 %pseudorandomize all originals and variants in blocks of 4, using all 16
@@ -49,6 +52,10 @@ for i = 1:N_images
     scenario_matrix = double(imread(fullfile(scenario_Folder,scenario_sequence{i})));
     scenario_texture(i) = Screen('MakeTexture', mainWindow, scenario_matrix);
 end
+% make nonresponse texture
+stimuliFolder = fullfile(workingDir, 'stimuli');
+noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpg')));
+noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 %make phase 4 timing changes(***EXLCUDE FEEDBACK)
 config.nTrials = N_images;
@@ -57,7 +64,7 @@ config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %
 runStart = GetSecs;
 
 % give cue, wait to begin
-instruct = ['Would you like to start?' ...
+instruct = ['Would you like to begin Phase 4?' ...
     '\n\n-- press "enter" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p4StartTime = waitForKeyboard(trigger,device);

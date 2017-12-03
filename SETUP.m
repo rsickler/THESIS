@@ -1,7 +1,7 @@
 % debug conditions
-debugging = false;
-joystick = false;
-running = false;
+debugging = true;
+joystick = true;
+running = true;
 % setting up your subject's folder
 if running
     workingDir = '/Users/normanlab/THESIS';
@@ -185,10 +185,6 @@ end
 %count images
 N_og_images = length(og_scenarios);
 N_v_images = length(v_scenarios);
-% make nonresponse texture
-stimuliFolder = fullfile(workingDir, 'stimuli');
-noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpg')));
-noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 % GETTING INPUT FROM PERSON
 stim.session = SESSION;

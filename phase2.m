@@ -3,7 +3,9 @@
 function phase2(SUBJECT,SUBJ_NAME,SESSION)
 
 % STARTING EXPERIMENT
-SETUP;
+SETUP; 
+instruct = 'Loading Phase 2...';
+displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
 % PSEUD0-RANDOMIZE
 scenario_sequence = [];
@@ -15,7 +17,7 @@ inc1_u_sequence = [];
 inc2_u_sequence = [];
 used_variants = zeros(1,N_v_images);
 
-% make series of 4 bundles (each variant image shown 1 time)
+% make series of 4 bundles of 10 (each variant image shown 1 time)
 for i =1:4
     %add a variant scenario to all 4 orignals to make bundle of 5
     ran1 = randi(4);
@@ -104,9 +106,13 @@ for i = 1:N_images
     inc2_u_matrix = double(imread(fullfile(inc2_u_Folder,inc2_u_sequence{i})));
     inc2_u_texture(i) = Screen('MakeTexture', mainWindow, inc2_u_matrix);
 end
+% make nonresponse texture
+stimuliFolder = fullfile(workingDir, 'stimuli');
+noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpg')));
+noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 % BEGIN PHASE 2
-instruct = ['Would you like to start phase 2?' ...
+instruct = ['Would you like to start Phase 2?' ...
     '\n\n Remember, the color of the team you are playing matters!' ...
     '\n\n --  press "enter" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);

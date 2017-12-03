@@ -4,7 +4,9 @@
 function phase3_training(SUBJECT,SUBJ_NAME,SESSION)
 
 % STARTING EXPERIMENT
-SETUP;
+SETUP; 
+instruct = 'Loading Phase 3...';
+displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
 % PSEUDO-RANDOMIZE
 %pseudorandomize all originals and variants in blocks of 4, using all 16
@@ -91,6 +93,10 @@ for i = 1:N_images
     inc2_u_matrix = double(imread(fullfile(inc2_u_Folder,inc2_u_sequence{i})));
     inc2_u_texture(i) = Screen('MakeTexture', mainWindow, inc2_u_matrix);
 end
+% make nonresponse texture
+stimuliFolder = fullfile(workingDir, 'stimuli');
+noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpg')));
+noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 %BEGIN PHASE 3
 % give instructions, wait to begin

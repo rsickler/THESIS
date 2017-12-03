@@ -4,6 +4,12 @@ function phase1(SUBJECT,SUBJ_NAME,SESSION)
 
 % STARTING EXPERIMENT
 SETUP; 
+instruct = 'Loading Phase 1...';
+displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
+
+%KEY VARIABLES
+min_trials = 32;
+max_trials = 80; 
 
 % PSEUDO-RANDOMIZE
 all_orig = [1:N_og_images];
@@ -79,10 +85,14 @@ for i = 1:N_og_images*max_sequence_rounds
     og_inc2_u_matrix = double(imread(fullfile(og_inc2_u_Folder,inc2_u_sequence{i})));
     og_inc2_u_texture(i) = Screen('MakeTexture', mainWindow, og_inc2_u_matrix);
 end
+% make nonresponse texture
+stimuliFolder = fullfile(workingDir, 'stimuli');
+noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpg')));
+noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 
 % ----BEGIN PHASE 1 ----
-instruct = ['Would you like to begin the experiment?'...
+instruct = ['Would you like to begin Phase 1?'...
     '\n\n\n\n -- press "enter" to continue --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p1StartTime = waitForKeyboard(trigger,device);
@@ -104,8 +114,6 @@ Acorrect_trials = 0;
 Bcorrect_trials = 0;
 Aratio = 0;
 Bratio = 0;
-min_trials = 32;
-max_trials = 80; 
 
 % RUN TRIALS
 %loop through until trial number and trial accuracies for both are met
@@ -231,17 +239,27 @@ timing.plannedOnsets.lastITI = timing.plannedOnsets.feedback(end) + config.nTRs.
 timespec = timing.plannedOnsets.lastITI-slack;
 timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
 WaitSecs(2);
-displayText(mainWindow,'80% accuracy achieved! Hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-WaitSecs(2);
 
-%SET UP SUBJECT DATA 
+%SAVE SUBJECT DATA 
 % matlab save file
 matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
 data_dir = fullfile(workingDir, 'BehavioralData');
 if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
-
+%fix trial count if went to max
+if trial > max_trials
+    trial = trial-1;
+end
+%save important variables
 save(matlabSaveFile,'SUBJ_NAME','stim', 'timing','trial','P1_order',...
     'P1_response', 'P1_luck','Atrials','Btrials','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
+
+%present closing screen
+instruct = ['That completes the first phase! You may now take a brief break before phase two. Press enter when you are ready to continue.' ...
+    '\n\n\n\n -- press "enter" to continue --'];
+DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('Flip',mainWindow, INSTANT);
+end_press = waitForKeyboard(trigger,device);
+
 end

@@ -1,7 +1,7 @@
 %%% phase 3 (in scanner) is continued training of variants and originals together,
 %%% but this time at even ratios. This version has feedback.
 
-function phase3_training(SUBJECT,SESSION)
+function phase3_training(SUBJECT,SUBJ_NAME,SESSION)
 
 % STARTING EXPERIMENT
 SETUP;

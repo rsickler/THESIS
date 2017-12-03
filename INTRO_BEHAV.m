@@ -1,4 +1,4 @@
-function INTRO_BEHAV(SUBJECT,SESSION)
+function INTRO_BEHAV(SUBJECT,SUBJ_NAME,SESSION)
 
 %SETUP 
 SETUP; 
@@ -19,6 +19,8 @@ intro_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (intro_PICDIMS(HORIZONTAL)*intr
 intro_topLeft(VERTICAL) = intro_picRow - (intro_PICDIMS(VERTICAL)*intro_RESCALE_FACTOR(VERTICAL))/2;
 
 % present experiment summary
+fontSize = round(30 * (windowSize.pixels(SIZE_AXIS) / DEFAULT_MONITOR_SIZE(SIZE_AXIS)));
+Screen('TextSize',mainWindow,fontSize);
 start_time = GetSecs;
 instruct = ['Hello! \n\n' ...
     'In this experiment, you will be presented with images of two different scenarios ' ...
@@ -35,13 +37,15 @@ Screen('Flip',mainWindow, INSTANT);
 intro_press1 = waitForKeyboard(trigger,device);
 
 %instructions for 1 blocker
+fontSize = round(24 * (windowSize.pixels(SIZE_AXIS) / DEFAULT_MONITOR_SIZE(SIZE_AXIS)));
+Screen('TextSize',mainWindow,fontSize);
 instruct = ['When faced with a single blocker, your three options are:'...
     '\n\n  1.    Hit the ball towards the defender on the same side of the court as you.'...
     '\n\n  2.    Hit the ball towards the center defender.' ...
     '\n\n  3.    Hit the ball towards the defender on the opposite side of the court as you.'...
     '\n\n The joystick movements associated with each of these three options are shown below. '...
     'Notice the movements are flipped depending on which side of the court you are starting from!'];
-DrawFormattedText(mainWindow,instruct,intro_textRow,intro_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.2);
+DrawFormattedText(mainWindow,instruct,intro_textRow,intro_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.75);
 Screen('DrawTexture', mainWindow,oneBlocker_texture,[0 0 intro_PICDIMS],[intro_topLeft intro_topLeft+intro_PICDIMS.*intro_RESCALE_FACTOR]);
 cont = ['-- press "enter" to continue --'];
 DrawFormattedText(mainWindow,cont,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -49,24 +53,26 @@ Screen('Flip',mainWindow, INSTANT);
 intro_press2 = waitForKeyboard(trigger,device);
 
 %instructions for 2 blocker
+fontSize = round(23 * (windowSize.pixels(SIZE_AXIS) / DEFAULT_MONITOR_SIZE(SIZE_AXIS)));
+Screen('TextSize',mainWindow,fontSize);
 instruct = ['When faced with two blockers, however, these options are no longer available, so the choices change accordingly! In this case, the three options are:'...
     '\n\n  1.    Hit the ball off the blockers hands away from the court (in volleyball, it?s a point if they touch it!).'...
     '\n\n  2.    Gently tip the ball straight over the blockers.'...
     '\n\n  3.    Hit the ball inside the blockers toward the defender on the other side of the court.'...
-    '\n\n The joystick movements associated with each of these three options are shown below.'];   
-DrawFormattedText(mainWindow,instruct,intro_textRow,intro_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.2);
+    '\n\n In this scenario, the joystick movements are much sharper, in that you should not push the joystick all the way forward. '...
+    'How far vertically you move the joystick is just as important as horizontally!'];   
+DrawFormattedText(mainWindow,instruct,intro_textRow,intro_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.75);
 Screen('DrawTexture', mainWindow,twoBlocker_texture,[0 0 intro_PICDIMS],[intro_topLeft intro_topLeft+intro_PICDIMS.*intro_RESCALE_FACTOR]);
 instruct2 = ['In this scenario, the joystick movements are much sharper, in that you should not push the joystick all the way forward. '...
-    'How far vertically you move the joystick is just as important as horizontally! ' ...
-    'Again, notice the movements are flipped depending on which side of the court you are starting from!'];
-DrawFormattedText(mainWindow,instruct2,intro_textRow,cont_textRow*.8,COLORS.MAINFONTCOLOR,WRAPCHARS*1.2);
+    'How far vertically you move the joystick is just as important as horizontally!'];
 cont = ['-- press "enter" to continue --'];
 DrawFormattedText(mainWindow,cont,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 intro_press3 = waitForKeyboard(trigger,device);
 
 % back to explaining
-Screen('TextSize',mainWindow,MAINFONTSIZE);
+fontSize = round(30 * (windowSize.pixels(SIZE_AXIS) / DEFAULT_MONITOR_SIZE(SIZE_AXIS)));
+Screen('TextSize',mainWindow,fontSize);
 instruct = ['When presented with each scenario, you will have 4 seconds to process '...
     'the image and think about what your response will be. Remember to look at the color '... 
     'jersey the opponent team is wearing-  what color team you are playing matters! '... 
@@ -114,7 +120,7 @@ instruct = ['Lets make sure you understand the joystick movements.'...
     ' Here are the three options against a single block again, starting from the left side of the court:'];
 DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('DrawTexture', mainWindow,oneTest_texture,[0 0 test_PICDIMS],[test_topLeft test_topLeft+test_PICDIMS.*test_RESCALE_FACTOR]);
-test = '1. Try hitting down the line by moving (and holding) the joystick all the way forward and toward your body.';
+test = '1. Try hitting toward the leftmost defender by moving the joystick all the way forward and all the way to the left.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 WaitSecs(3); 
@@ -142,7 +148,7 @@ instruct = ['Lets make sure you understand the joystick movements.'...
     ' Here are the three options against a single block again, assuming you start on the left side of the court:'];
 DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('DrawTexture', mainWindow,oneTest_texture,[0 0 test_PICDIMS],[test_topLeft test_topLeft+test_PICDIMS.*test_RESCALE_FACTOR]);
-test = '2. Try hitting straight ahead by moving (and holding) the joystick all the way forward and centered.';
+test = '2. Try hitting straight ahead toward the middle defender by moving (and holding) the joystick all the way forward while keeping it centered.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 WaitSecs(3); 
@@ -171,7 +177,7 @@ instruct = ['Lets make sure you understand the joystick movements.'...
     ' Here are the three options against a single block again, assuming you start on the left side of the court:'];
 DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('DrawTexture', mainWindow,oneTest_texture,[0 0 test_PICDIMS],[test_topLeft test_topLeft+test_PICDIMS.*test_RESCALE_FACTOR]);
-test = '3. Try hitting the ball deep across the court by moving (and holding) the joystick straight ahead by moving (and holding) the joystick all the way forward and away from your body.';
+test = '3. Try hitting the ball to the rightmost defender by (and holding) the joystick all the way forward and all the way to the right.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 WaitSecs(3); 
@@ -200,7 +206,7 @@ instruct = ['Now here are the three options against a double block, assuming you
     'Remember, here you do not move the joystick all the way forward!'];
 DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('DrawTexture', mainWindow,twoTest_texture,[0 0 test_PICDIMS],[test_topLeft test_topLeft+test_PICDIMS.*test_RESCALE_FACTOR]);
-test = '1. Try tooling the ball out of bounds off the block by moving (and holding) the joystick slightly forward and all the way toward your body.';
+test = '1. Try hitting the ball off the block out of bounds off the block by moving (and holding) the joystick slightly forward and all the way toward the left.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 WaitSecs(3); 
@@ -229,7 +235,7 @@ instruct = ['Now here are the three options against a double block, assuming you
     'Remember, here you do not move the joystick all the way forward!'];
 DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('DrawTexture', mainWindow,twoTest_texture,[0 0 test_PICDIMS],[test_topLeft test_topLeft+test_PICDIMS.*test_RESCALE_FACTOR]);
-test = '2. Try tipping the ball just over the block by moving (and holding) the joystick slightly forward and centered.';
+test = '2. Try tipping the ball just over the block by moving (and holding) the joystick slightly forward while keeping it centered.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 WaitSecs(3); 
@@ -258,7 +264,7 @@ instruct = ['Now here are the three options against a double block, assuming you
     'Remember, here you do not move the joystick all the way forward!'];
 DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('DrawTexture', mainWindow,twoTest_texture,[0 0 test_PICDIMS],[test_topLeft test_topLeft+test_PICDIMS.*test_RESCALE_FACTOR]);
-test = '3. Try hitting the ball sharp across the court by moving (and holding) the joystick straight ahead by moving the joystick slightly forward and al the way away from your body.';
+test = '3. Try hitting the ball sharp across the court by moving (and holding) the joystick slightly forward and al the way toward the right.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 WaitSecs(3); 

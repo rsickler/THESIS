@@ -2,7 +2,7 @@
 %%% subejects are tested on original and variants at even ratios and
 %%% WITHOUT feedback. 
 
-function phase4(SUBJECT,SESSION)
+function phase4(SUBJECT,SUBJ_NAME,SESSION)
 
 SETUP;
 

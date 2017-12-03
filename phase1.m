@@ -1,6 +1,6 @@
 %%% phase 1 is introduction to originals until 80% accuracy or max exposure. 
 
-function phase1(SUBJECT,SESSION)
+function phase1(SUBJECT,SUBJ_NAME,SESSION)
 
 % STARTING EXPERIMENT
 SETUP; 

@@ -1,6 +1,6 @@
 %%% phase 2 is initial addition of variants to originals, at 1:4 ratio.
 
-function phase2(SUBJECT,SESSION)
+function phase2(SUBJECT,SUBJ_NAME,SESSION)
 
 % STARTING EXPERIMENT
 SETUP;

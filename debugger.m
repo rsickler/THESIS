@@ -1,0 +1,6 @@
+% PHASE 1
+SUBJECT = 1;
+SUBJ_NAME = 'Trey';
+SESSION = 1;
+phase1(SUBJECT, SUBJ_NAME, SESSION);
+clear all; 

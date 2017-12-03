@@ -126,7 +126,7 @@ while (trial <= max_trials)
     timing.actualOnsets.preITI(trial) = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
     % scenario
     timespec = timing.plannedOnsets.scenario(trial)-slack;
-    Screen('DrawTexture', mainWindow, og_scenario_texture(picnumber), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
+    Screen('DrawTexture', mainWindow, og_scenario_texture(trial), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
     timing.actualOnsets.scenario(trial) = Screen('Flip',mainWindow,timespec);
     % go
     timespec = timing.plannedOnsets.go(trial)-slack;
@@ -167,12 +167,12 @@ while (trial <= max_trials)
     if correct_movement
         if luck > .2
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, og_correct_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('DrawTexture', mainWindow, og_correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
             P1_luck{trial} = 1; 
         else
             DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, og_correct_u_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('DrawTexture', mainWindow, og_correct_u_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
             P1_luck{trial} = 0; 
         end
@@ -184,12 +184,12 @@ while (trial <= max_trials)
     elseif inc1_movement
         if luck < .2
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, og_inc1_u_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('DrawTexture', mainWindow, og_inc1_u_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
             P1_luck{trial} = 1;
         else
             DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, og_inc1_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('DrawTexture', mainWindow, og_inc1_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
             P1_luck{trial} = 0;
         end
@@ -197,12 +197,12 @@ while (trial <= max_trials)
     elseif inc2_movement
         if luck < .2
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, og_inc2_u_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('DrawTexture', mainWindow, og_inc2_u_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
             P1_luck{trial} = 1;
         else
             DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, og_inc2_texture(picnumber),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+            Screen('DrawTexture', mainWindow, og_inc2_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
             Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
             P1_luck{trial} = 0;
         end

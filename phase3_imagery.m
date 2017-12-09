@@ -8,6 +8,18 @@ SETUP;
 instruct = 'Loading Phase 3...';
 displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
+% matlab save file
+matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+data_dir = fullfile(workingDir, 'BehavioralData');
+if ~exist(data_dir,'dir'), mkdir(data_dir); end
+ppt_dir = [data_dir filesep SUBJ_NAME filesep];
+if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
+
+% this sets up the structure
+subj_triggerNext = false; 
+subj_promptDur = 2; 
+subj_listenDur = 0;
+
 % PSEUDORANDOMIZE SCENARIOS
 %pseudorandomize all originals and variants in blocks of 4, using all 16
 % images once each
@@ -38,6 +50,9 @@ for T = 1:nQuads
     end
 end
 N_images = length(scenario_sequence);
+%make stim map
+stim_map = makeMap(scenario_sequence);
+cond_map = makeMap({'even', 'odd'});
 
 %make textures in the pseudo-randomized order
 for i = 1:N_images
@@ -62,17 +77,26 @@ v_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (v_PICDIMS(HORIZONTAL)*v_RESCALE_FA
 v_topLeft(VERTICAL) = v_picRow - (v_PICDIMS(VERTICAL)*v_RESCALE_FACTOR(VERTICAL))/2;
 
 %set button presses to for feedback
-UNO = '1'; 
-DOS= '2';
-TRES = '3';
-CUATRO = '4';
-CINCO = '5';
-keys = [UNO, DOS TRES CUATRO CINCO];
-keyCell = [UNO, DOS TRES CUATRO CINCO];
-allkeys = keys;
-% *****this records the subject's response at every trial
-
-
+THUMB = 'z';
+INDEXFINGER='e';
+MIDDLEFINGER='r';
+RINGFINGER='t';
+PINKYFINGER='y';
+KEYS = [THUMB INDEXFINGER MIDDLEFINGER RINGFINGER PINKYFINGER];
+keyCell = {THUMB, INDEXFINGER, MIDDLEFINGER, RINGFINGER, PINKYFINGER};
+cresp = keyCell(3:5); 
+subj_keys = keyCell;
+allkeys = KEYS;
+% define key names
+for i = 1:length(allkeys)
+    keys.code(i,:) = getKeys(allkeys(i));
+    keys.map(i,:) = zeros(1,256);
+    keys.map(i,keys.code(i,:)) = 1;
+end
+subj_keycode = keys.code(1:5,:);
+cresp_map = sum(keys.map(3:5,:)); 
+subj_map = sum(keys.map(1:5,:)); 
+subj_scale = makeMap({'no image', 'generic', '1 detail', '2+ details', 'full'}, 1:5, subj_keys);
 
 
 
@@ -124,6 +148,19 @@ config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.ima
 config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
 runStart = GetSecs;
 
+% initialize structure
+subjectiveEK = initEasyKeys(['phase3_imagery' '_SUB'], SUBJ_NAME,ppt_dir, ...
+    'default_respmap', subj_scale, ...
+    'stimmap', stim_map, ...
+    'condmap', cond_map, ...
+    'trigger_next', subj_triggerNext, ...
+    'prompt_dur', subj_promptDur, ...
+    'listen_dur', subj_listenDur, ...
+    'exp_onset', runStart, ...
+    'console', false, ...
+    'device', -1);
+subjectiveEK = startSession(subjectiveEK); 
+
 %PRESENT DIRECTED TRIALS
 trial = 1;
 while trial <= N_images
@@ -153,21 +190,21 @@ while trial <= N_images
     timing.actualOnsets.go(trial) = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
     % beep 
     timespec = timing.plannedOnsets.beep(trial);
-    while (GetSecs - timespec) > .05
-    end
-    basic_tone    
-    
+    duration = .25;
+    basic_tone(timespec-duration,duration);
     % vividness
     timespec = timing.plannedOnsets.vividness(trial)-slack;
     Screen('DrawTexture', mainWindow, vividness_texture,[0 0 v_PICDIMS],[v_topLeft v_topLeft+v_PICDIMS.*v_RESCALE_FACTOR]);
     timing.actualOnsets.vividness(trial) = Screen('Flip',mainWindow,timespec);
+    subjectiveEK = easyKeysTREY(subjectiveEK, ...
+        'onset', timing.actualOnsets.vividness(trial), ...
+        'stim', scenario_sequence(trial), ...
+        'cresp', cresp, ...
+        'cond', 1, ...
+        'cresp_map', cresp_map,...
+        'valid_map', subj_map); 
     
-    
-    
-    
-    %*****record vividness input
-    
-    %update trial
+        %update trial
     trial= trial+1;
 end
 % throw up a final ITI
@@ -178,24 +215,15 @@ WaitSecs(2);
 displayText(mainWindow,'That completes phase 3!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
 
-%close beep program
+%close some loose ends
 PsychPortAudio('Close', pahandle);
+endSession(subjectiveEK);
 
 % SAVE SUBJECT DATA 
-% matlab save file
-matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
-data_dir = fullfile(workingDir, 'BehavioralData');
-if ~exist(data_dir,'dir'), mkdir(data_dir); end
-ppt_dir = [data_dir filesep SUBJ_NAME filesep];
-if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
-
-%save important variables
 total_trials = trial - 1; 
 P3_order = scenario_sequence;
-save(matlabSaveFile, 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
+save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
     'P3_order');  
-%%%***SAVE KEY PRESS???
-
 
 %present closing screen
 instruct = ['That completes the first phase! You may now take a brief break before phase two. Press enter when you are ready to continue.' ...

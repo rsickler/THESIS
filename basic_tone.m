@@ -1,10 +1,10 @@
-function basic_tone(trigger)
+function basic_tone(trigger,duration)
 
 % Perform basic initialization of the sound driver:
 InitializePsychSound(1);
 freq = 44100;
 nrchannels = 1;
-snddata = MakeBeep(378, .25, freq);
+snddata = MakeBeep(378, duration, freq);
 pahandle = PsychPortAudio('Open', [], [], [], freq, nrchannels);
 PsychPortAudio('FillBuffer', pahandle, snddata);
 

@@ -252,7 +252,7 @@ if trial > max_trials
     trial = trial-1;
 end
 %save important variables
-save(matlabSaveFile,'SUBJ_NAME','stim', 'timing','trial','P1_order',...
+save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim', 'timing','trial','P1_order',...
     'P1_response', 'P1_luck','Atrials','Btrials','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
 
 %present closing screen

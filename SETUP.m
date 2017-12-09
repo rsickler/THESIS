@@ -7,11 +7,6 @@ if running
     workingDir = '/Users/normanlab/THESIS';
 else workingDir = '/Users/treysickler/Documents/MATLAB/THESIS';
 end
-if debugging
-    SESSION = 1; 
-    SUBJECT = 1;
-    SUBJ_NAME = 1;
-end
 DEBUG_MONITOR_SIZE = [2560 1600]/4;
 
 % SETTING WINDOW/DISPLAY

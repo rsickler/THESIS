@@ -1,10 +1,12 @@
 %%% phase 3 (in scanner) is continued training of variants and originals together,
 %%% at even ratios. ***nf = NO FEEDBACK
 
-function phase3_training_nf(SUBJECT,SESSION)
+function phase3_training_nf(SUBJECT,SUBJ_NAME,SESSION)
 
 % STARTING EXPERIMENT
 SETUP;
+instruct = 'Loading Phase 3...';
+displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
 % PSEUDO-RANDOMIZE
 %pseudorandomize all originals and variants for current sweep

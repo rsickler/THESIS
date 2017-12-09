@@ -251,10 +251,8 @@ timing.plannedOnsets.lastITI = timing.plannedOnsets.feedback(end) + config.nTRs.
 timespec = timing.plannedOnsets.lastITI-slack;
 timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLACK,WRAPCHARS,timespec);
 WaitSecs(2);
-displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-WaitSecs(2);
 
-%SET UP SUBJECT DATA 
+% SAVE SUBJECT DATA 
 % matlab save file
 matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
 data_dir = fullfile(workingDir, 'BehavioralData');
@@ -268,5 +266,12 @@ Bratio = Bcorrect_trials / Btrials;
 
 save(matlabSaveFile, 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
     'P3_order','P3_response','P3_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
+
+%present closing screen
+instruct = ['That completes the first phase! You may now take a brief break before phase two. Press enter when you are ready to continue.' ...
+    '\n\n\n\n -- press "enter" to continue --'];
+DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('Flip',mainWindow, INSTANT);
+end_press = waitForKeyboard(trigger,device);
 
 end

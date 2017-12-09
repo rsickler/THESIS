@@ -1,8 +1,10 @@
 % The irrelevant task group will be asked to add the 
 % given numbers and report whether they are even or odd. 
 
-function phase3_distractor(SUBJECT, SESSION, SUBJ_NAME)
+function phase3_distractor(SUBJECT,SUBJ_NAME,SESSION)
 SETUP; 
+instruct = 'Loading Phase 3...';
+displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
 %set button presses to even/odd
 UNO = '1'; %even 

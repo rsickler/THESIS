@@ -112,7 +112,7 @@ stim.scenarioDuration = 3*SPEED;
 stim.imagineDuration = 3*SPEED;
 stim.goDuration = 4*SPEED;
 stim.vividnessDuration = 2*SPEED;
-beep_time = 0.25; 
+beep_time = 0.2; 
 
 config.nTRs.ISI = stim.isiDuration/stim.TRlength;
 config.nTRs.scenario = stim.scenarioDuration/stim.TRlength;
@@ -152,13 +152,13 @@ while trial <= N_images
     timespec = timing.plannedOnsets.go(trial)-slack;
     timing.actualOnsets.go(trial) = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
     % beep 
-    timespec = timing.plannedOnsets.beep(trial);
-    while (GetSecs - timespec) > .05
-    end
-    basic_tone    
+    timespec = timing.plannedOnsets.beep(trial)-slack;
+    if timespec 
+    
     
     % vividness
     timespec = timing.plannedOnsets.vividness(trial)-slack;
+    play_tone(timespec);
     Screen('DrawTexture', mainWindow, vividness_texture,[0 0 v_PICDIMS],[v_topLeft v_topLeft+v_PICDIMS.*v_RESCALE_FACTOR]);
     timing.actualOnsets.vividness(trial) = Screen('Flip',mainWindow,timespec);
     
@@ -177,9 +177,6 @@ timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.MAI
 WaitSecs(2);
 displayText(mainWindow,'That completes phase 3!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
-
-%close beep program
-PsychPortAudio('Close', pahandle);
 
 % SAVE SUBJECT DATA 
 % matlab save file

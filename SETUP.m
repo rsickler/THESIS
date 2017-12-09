@@ -1,7 +1,7 @@
 % debug conditions
 debugging = true;
-joystick = true;
-running = true;
+joystick = false;
+running = false;
 % setting up your subject's folder
 if running
     workingDir = '/Users/normanlab/THESIS';
@@ -10,6 +10,7 @@ end
 if debugging
     SESSION = 1; 
     SUBJECT = 1;
+    SUBJ_NAME = 1;
 end
 DEBUG_MONITOR_SIZE = [2560 1600]/4;
 

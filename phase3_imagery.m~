@@ -186,26 +186,13 @@ while trial <= N_images
     timespec = timing.plannedOnsets.imagine(trial)-slack;
     timing.actualOnsets.go(trial) = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
         % imagine audio
+    % find out whic 
     
     
     % go
     timespec = timing.plannedOnsets.go(trial)-slack;
     timing.actualOnsets.go(trial) = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
-    % find out which audio to play
-    this_pic = scenario_sequence{trial};
-    if this_pic(1) == 'A'
-        if this_pic(3) == 'O' % if original
-            correct_movement = 1;   %full diagnal line
-        else % if variant
-            correct_movement = 2; %full diagnal cross
-        end
-    else %else in B
-        if this_pic(3) == 'O' % if original
-            correct_movement = 3; %shwype
-        else % if variant
-            correct_movement = 4; %tip ahead
-        end
-    end
+        %go audio
     % beep 
     timespec = timing.plannedOnsets.beep(trial);
     duration = beep_time;

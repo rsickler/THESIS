@@ -1,3 +1,0 @@
-trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
-' format_str '' format_str 'trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
-trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   

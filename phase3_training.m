@@ -1,5 +1,6 @@
 %%% phase 3 (in scanner) is continued training of variants and originals together,
 %%% but this time at even ratios. This version has feedback.
+% 2s --> 6s ----> 4s --> 2s
 
 function phase3_training(SUBJECT,SUBJ_NAME,SESSION)
 
@@ -109,16 +110,7 @@ P3_order = scenario_sequence;
 P3_response = {};
 P3_luck = {};
 
-%%alter phase 3 timing to parallel imagery sessions timescale
-stim.isiDuration = 8*SPEED;
-stim.scenarioDuration = 4*SPEED;
-stim.goDuration = 4*SPEED;
-stim.feedbackDuration = 2*SPEED;
-config.TR = stim.TRlength;
-config.nTRs.ISI = stim.isiDuration/stim.TRlength;
-config.nTRs.scenario = stim.scenarioDuration/stim.TRlength;
-config.nTRs.go = stim.goDuration/stim.TRlength;
-config.nTRs.feedback = stim.feedbackDuration/stim.TRlength;
+%set up phase 3 specific timings
 config.nTrials = N_images;
 config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go +config.nTRs.feedback;
 config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
@@ -264,11 +256,11 @@ total_trials = trial - 1;
 Aratio = Acorrect_trials / Atrials;
 Bratio = Bcorrect_trials / Btrials;
 
-save(matlabSaveFile, 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
+save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
     'P3_order','P3_response','P3_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
 
 %present closing screen
-instruct = ['That completes the first phase! You may now take a brief break before phase two. Press enter when you are ready to continue.' ...
+instruct = ['That completes the third phase! You may now take a brief break before phase four. Press enter when you are ready to continue.' ...
     '\n\n\n\n -- press "enter" to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);

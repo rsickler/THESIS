@@ -3,6 +3,7 @@
 % % INTRO
 SUBJECT = 1;
 SUBJ_NAME = num2str(SUBJECT);
+TASK = 1;
 
 %%
 SESSION = 0;
@@ -18,7 +19,6 @@ phase2(SUBJECT, SUBJ_NAME, SESSION);
 %%
 % PHASE 3
 SESSION = 3;
-TASK = 2;
 if TASK == 1
     phase3_training(SUBJECT, SUBJ_NAME, SESSION);
 elseif TASK == 2

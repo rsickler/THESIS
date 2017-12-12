@@ -1,4 +1,5 @@
 %%% phase 2 is initial addition of variants to originals, at 1:4 ratio.
+% 2s --> 6s ----> 4s --> 2s
 
 function phase2(SUBJECT,SUBJ_NAME,SESSION)
 
@@ -136,7 +137,7 @@ Bcorrect_trials = 0;
 Aratio = 0;
 Bratio = 0;
 
-% begin!
+% RUN TRIALS
 while trial <= N_images
     % calculate all future onsets
     timing.plannedOnsets.preITI(trial) = runStart;
@@ -277,6 +278,14 @@ total_trials = trial - 1;
 Aratio = Acorrect_trials / Atrials;
 Bratio = Bcorrect_trials / Btrials;
 
-save(matlabSaveFile, 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
-    'P2_order','P2_response','P2_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
+save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
+    'P2_order','P2_response','P2_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');
+
+%present closing screen
+instruct = ['That completes the second phase! You may now take a brief break before phase three. Press enter when you are ready to continue.' ...
+    '\n\n\n\n -- press "enter" to continue --'];
+DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('Flip',mainWindow, INSTANT);
+end_press = waitForKeyboard(trigger,device);
+
 end

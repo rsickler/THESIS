@@ -1,63 +1,101 @@
 % The irrelevant task group will be asked to add the 
 % given numbers and report whether they are even or odd. 
+% 2s --> 4s -> 4s --> 4s
 
 function phase3_distractor(SUBJECT,SUBJ_NAME,SESSION)
 SETUP; 
 instruct = 'Loading Phase 3...';
 displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
-%set button presses to even/odd
-UNO = '1'; %even 
-DOS = '2'; %odd
-keys = [UNO, DOS];
-keyCell = {UNO, DOS};
-
-%set up stimuli presentation conditions
-num_qs = 4; % number of questions per run
-digits_promptDur = 3*SPEED;
-digits_isi = 1*SPEED;
-digits_triggerNext = false;
-
-%make maps
-digits_scale = makeMap({'even','odd'},[0 1],keyCell([1 2]));
-condmap = makeMap({'even','odd'});
-
-%SET UP SUBJECT DATA 
 % matlab save file
 matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
-data_dir = fullfile(workingDir, 'MRI_Data');
+data_dir = fullfile(workingDir, 'BehavioralData');
 if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 
-digitsEK = initEasyKeys('odd_even', SUBJ_NAME, ppt_dir,...
-            'default_respmap', digits_scale, ...
-            'condmap', condmap, ...
-            'trigger_next', digits_triggerNext, ...
-            'prompt_dur', digits_promptDur, ...
-            'device', device);
-        
-subjectiveEK = easyKeys(subjectiveEK, ...
-    'onset', timing.actualOnsets.vis(n), ...
-    'stim', stim.stim{stim.trial}, ...
-    'cond', stim.cond(stim.trial), ...
-    'cresp', cresp, 'cresp_map', cresp_map, 'valid_map', subj_map);
+%set button presses to for feedback
+ONE = '1';
+TWO = '2';
+KEYS = [ONE TWO];
+keyCell = {ONE, TWO};
+cresp = keyCell(1:2); 
+digits_keys = keyCell;
+allkeys = KEYS;
+% define key names
+for i = 1:length(allkeys)
+    keys.code(i,:) = getKeys(allkeys(i));
+    keys.map(i,:) = zeros(1,256);
+    keys.map(i,keys.code(i,:)) = 1;
+end
+
+%make maps
+cresp_map = sum(keys.map(1:2,:)); 
+subj_map = sum(keys.map(1:2,:)); 
+digits_scale = makeMap({'even','odd'},[0 1],keyCell([1 2]));
+cond_map = makeMap({'even', 'odd'});
+%stim_map = makeMap(scenario_sequence);   ****
 
 
-%go through i number of runs
-%go through j numbers for each run
-i = 1; 
-j = 1;
-[stim.digitAcc(i), stim.digitRT(i), timing.actualOnsets.math(i)] ...
+% GIVE INTRO
+%explanation of task 
+instruct = ['you will be performing addition of three numbers'...
+    '\n\n-- press "enter" to continue --'];
+DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('Flip',mainWindow, INSTANT);
+press1 = waitForKeyboard(trigger,device);
+
+
+% SET UP PRECISE TIMING 
+digits_promptDur = 4*SPEED; % length digits on screen
+digits_isi = 2*SPEED; % length ISI
+digits_listenDur = 0;
+digits_triggerNext = false; 
+runStart = GetSecs;
+
+% initialize structure
+digitsEK = initEasyKeys(['phase3_distractor' '_SUB'], SUBJ_NAME,ppt_dir, ...
+    'default_respmap', digits_scale, ...
+%     'stimmap', stim_map, ... ****
+    'condmap', cond_map, ...
+    'trigger_next', digits_triggerNext, ...
+    'prompt_dur', digits_promptDur, ...
+    'listen_dur', digits_listenDur, ...
+    'exp_onset', runStart, ...
+    'console', false, ...
+    'device', -1);
+digitsEK = startSession(digitsEK); 
+
+%% RUN TRIALS
+
+% 5 rounds of 3 problems each
+num_rounds = 5; 
+num_qs = 3;
+
+for round = 1:num_rounds
+    [digitAcc(round), digitRT(round), actualOnsets(round)] ...
     = odd_even(digitsEK,num_qs,digits_promptDur,digits_isi,mainWindow, ...
-    keyCell([1 2]),COLORS,device,SUBJ_NAME,[SESSION i],slack,INSTANT, keys);
+    keyCell([1 2]),COLORS,device,SUBJ_NAME,[SESSION round],slack,INSTANT, keys);
+end
 
-% put 5 s ISI
+
+%% close up shop
+% put final 2s ISI
 displayText(mainWindow,'+',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
 
-% this closes the structure
-endSession(digitsEK, 'Congratulations, you have completed the task!');
+% close the structure
+endSession(digitsEK);
+
+% save final variables
+save([ppt_dir matlabSaveFile], 'stim', 'timing', 'digitAcc','digitRT','actualOnsets');  
+
+%present closing screen
+instruct = ['That completes the third phase! You may now take a brief break before phase four. Press enter when you are ready to continue.' ...
+    '\n\n\n\n -- press "enter" to continue --'];
+DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('Flip',mainWindow, INSTANT);
+end_press = waitForKeyboard(trigger,device);
 
 end
 

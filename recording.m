@@ -5,10 +5,14 @@ InitializePsychSound(1);
 freq = 44100;
 nrchannels = 1;
 %pick audio file
-if situation ==1
-    [audiodata, infreq] = audioread('imagine.mp3');
-else 
-    [audiodata, infreq] = audioread('go.mp3');
+if situation ==1 %full diagnal line
+    [audiodata, infreq] = audioread('fullLine.mp3');
+elseif situation == 2 %full diagnal cross
+    [audiodata, infreq] = audioread('fullCross.mp3');
+elseif situation == 3 %shwype
+    [audiodata, infreq] = audioread('shwype.mp3');
+elseif situation == 4 %tip ahead
+    [audiodata, infreq] = audioread('tip.mp3');
 end
 
 pahandle = PsychPortAudio('Open', [], [], 1, freq, nrchannels);

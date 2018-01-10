@@ -198,10 +198,10 @@ while trial <= N_images
         end
         if this_pic(3) == 'O' % if original
             correct_movement = (x<=-.75) && (y>=-.75) && (y<=.25); %shwype
-            inc1_movement = (x>=-.75)&&(x<=.75) && (y>=.1) && (y<=.6); %tip ahead
+            inc1_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
             inc2_movement = (x>=.75) && (y>=-.1) && (y<=.75); %sharp cross
         else % if variant
-            correct_movement = (x>=-.75)&&(x<=.75) && (y>=.1) && (y<=.6); %tip ahead
+            correct_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
             inc1_movement = (x<=-.75) && (y>=-.1) && (y<=.75); %shwype
             inc2_movement = (x>=.75) && (y>=-.1) && (y<=.75); %sharp cross
         end

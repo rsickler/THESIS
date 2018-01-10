@@ -1,7 +1,7 @@
 % debug conditions
 debugging = false;
-joystick = false;
-running = 18;
+joystick = true;
+running = 17;
 % setting up your subject's folder
 if running == 17
     workingDir = '/Users/normanlab/THESIS';

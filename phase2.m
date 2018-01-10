@@ -129,6 +129,7 @@ runStart = GetSecs;
 P2_order = scenario_sequence;
 P2_response = {};
 P2_luck = {};
+
 %initiate variables
 trial = 1;
 Atrials =0;
@@ -280,7 +281,7 @@ Aratio = Acorrect_trials / Atrials;
 Bratio = Bcorrect_trials / Btrials;
 
 save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
-    'P2_order','P2_response','P2_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');
+    'P2_order','P2_response','P2_luck','Atrials','Btrials','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');
 
 %present closing screen
 instruct = ['That completes the second phase! You may now take a brief break before phase three. Press enter when you are ready to continue.' ...

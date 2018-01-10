@@ -73,6 +73,8 @@ stim.p4StartTime = waitForKeyboard(trigger,device);
 
 % BEGIN PHASE 4 TRIALS
 trial = 1;
+Atrials = 0; 
+Btrials = 0; 
 while trial <= N_images
     % calculate all future onsets
     timing.plannedOnsets.preITI(trial) = runStart;
@@ -171,7 +173,7 @@ total_trials = trial - 1;
 Aratio = Acorrect_trials / Atrials;
 Bratio = Bcorrect_trials / Btrials;
 
-save(matlabSaveFile, 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
+save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
     'P3_order','P3_response','P3_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
 
 end

@@ -4,7 +4,7 @@
 
 
 % % INTRO
-SUBJECT = 1;
+SUBJECT = 4;
 SUBJ_NAME = num2str(SUBJECT);
 TASK = 1;
 

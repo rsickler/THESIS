@@ -1,6 +1,6 @@
 % debug conditions
 debugging = false;
-joystick = true;
+joystick = false;
 running = 18;
 % setting up your subject's folder
 if running == 17
@@ -186,8 +186,6 @@ N_og_images = length(og_scenarios);
 N_v_images = length(v_scenarios);
 
 % GETTING INPUT FROM PERSON
-stim.session = SESSION;
-stim.subject = SUBJECT;
 stim.num_realtime = 10;
 stim.num_omit = 10;
 stim.num_learn = 8;

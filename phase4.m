@@ -41,6 +41,7 @@ for T = 1:nQuads
         end
     end
 end
+P4_order = scenario_sequence;
 
 %make SCENARIO TEXTURES ONLY in the pseudo-randomized order
 N_images = length(scenario_sequence);
@@ -75,6 +76,9 @@ stim.p4StartTime = waitForKeyboard(trigger,device);
 trial = 1;
 Atrials = 0; 
 Btrials = 0; 
+Acorrect_trials = 0; 
+Bcorrect_trials = 0; 
+
 while trial <= N_images
     % calculate all future onsets
     timing.plannedOnsets.preITI(trial) = runStart;
@@ -153,7 +157,7 @@ while trial <= N_images
     trial= trial+1;
 end
 % throw up a final ITI
-timing.plannedOnsets.lastITI = timing.plannedOnsets.feedback(end) + config.nTRs.feedback*config.TR;
+timing.plannedOnsets.lastITI = timing.plannedOnsets.go(end) + config.nTRs.go*config.TR;
 timespec = timing.plannedOnsets.lastITI-slack;
 timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLACK,WRAPCHARS,timespec);
 WaitSecs(2);
@@ -174,6 +178,6 @@ Aratio = Acorrect_trials / Atrials;
 Bratio = Bcorrect_trials / Btrials;
 
 save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
-    'P3_order','P3_response','P3_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
+    'P4_order','P4_response','P4_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
 
 end

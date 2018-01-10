@@ -1,6 +1,6 @@
 % The irrelevant task group will be asked to add the 
 % given numbers and report whether they are even or odd. 
-% 2s --> 4s -> 4s --> 4s
+%  2s --> 4s --> 4s--> 4s
 
 function phase3_distractor(SUBJECT,SUBJ_NAME,SESSION)
 SETUP; 
@@ -30,12 +30,9 @@ for i = 1:length(allkeys)
 end
 
 %make maps
-cresp_map = sum(keys.map(1:2,:)); 
-subj_map = sum(keys.map(1:2,:)); 
+digits_map = sum(keys.map([1:2],:)); 
 digits_scale = makeMap({'even','odd'},[0 1],keyCell([1 2]));
 cond_map = makeMap({'even', 'odd'});
-%stim_map = makeMap(scenario_sequence);   ****
-
 
 % GIVE INTRO
 %explanation of task 
@@ -48,7 +45,7 @@ press1 = waitForKeyboard(trigger,device);
 
 % SET UP PRECISE TIMING 
 digits_promptDur = 4*SPEED; % length digits on screen
-digits_isi = 2*SPEED; % length ISI
+digits_isi = 0*SPEED; % length ISI
 digits_listenDur = 0;
 digits_triggerNext = false; 
 runStart = GetSecs;
@@ -56,7 +53,6 @@ runStart = GetSecs;
 % initialize structure
 digitsEK = initEasyKeys(['phase3_distractor' '_SUB'], SUBJ_NAME,ppt_dir, ...
     'default_respmap', digits_scale, ...
-%     'stimmap', stim_map, ... ****
     'condmap', cond_map, ...
     'trigger_next', digits_triggerNext, ...
     'prompt_dur', digits_promptDur, ...
@@ -72,12 +68,15 @@ digitsEK = startSession(digitsEK);
 num_rounds = 5; 
 num_qs = 3;
 
+timing.plannedOnsets.ITI(trial) = runStart;
+timing.plannedOnsets.math(trial) = runStart;
+
 for round = 1:num_rounds
+    WaitSecs(2);
     [digitAcc(round), digitRT(round), actualOnsets(round)] ...
     = odd_even(digitsEK,num_qs,digits_promptDur,digits_isi,mainWindow, ...
     keyCell([1 2]),COLORS,device,SUBJ_NAME,[SESSION round],slack,INSTANT, keys);
 end
-
 
 %% close up shop
 % put final 2s ISI

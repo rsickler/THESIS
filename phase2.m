@@ -1,5 +1,6 @@
 %%% phase 2 is initial addition of variants to originals, at 1:4 ratio.
 % 2s --> 6s ----> 4s --> 2s
+% 4 bundles of 10 => 9.3 minutes
 
 function phase2(SUBJECT,SUBJ_NAME,SESSION)
 

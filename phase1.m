@@ -1,5 +1,7 @@
 %%% phase 1 is introduction to originals until 80% accuracy or max exposure. 
 % 2s --> 6s ----> 4s --> 2s
+%min trial = 24 => 5.6 minutes 
+%max trial = 40 => 9.3 minutes 
 
 function phase1(SUBJECT,SUBJ_NAME,SESSION)
 
@@ -9,8 +11,8 @@ instruct = 'Loading Phase 1...';
 displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
 %KEY VARIABLES
-min_trials = 32;
-max_trials = 48; 
+min_trials = 24;
+max_trials = 40; 
 
 % PSEUDO-RANDOMIZE
 all_orig = [1:N_og_images];

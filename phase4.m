@@ -1,6 +1,8 @@
 %%% Code for the final testing phase for all subject groups, in which
 %%% subejects are tested on original and variants at even ratios and
 %%% WITHOUT feedback. 
+% 2s --> 6s ----> 4s
+% all 16 images twice => 6.4 minutes
 
 function phase4(SUBJECT,SUBJ_NAME,SESSION)
 

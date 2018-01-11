@@ -90,7 +90,7 @@ for i = 1:N_og_images*max_sequence_rounds
 end
 % make nonresponse texture
 stimuliFolder = fullfile(workingDir, 'stimuli');
-noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpg')));
+noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpeg')));
 noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 
@@ -170,9 +170,9 @@ while (trial <= max_trials)
         if this_pic(2) == 'R'
             x = -x;
         end
-        correct_movement = (x<=-.75) && (y>=-.75) && (y<=.25); %shwype
+        correct_movement = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
         inc1_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
-        inc2_movement = (x>=.75) && (y>=-.75) && (y<=.25); %sharp cross
+        inc2_movement = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
     end
     luck = rand;
     if correct_movement

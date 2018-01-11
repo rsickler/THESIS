@@ -96,7 +96,7 @@ for i = 1:N_images
 end
 % make nonresponse texture
 stimuliFolder = fullfile(workingDir, 'stimuli');
-noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpg')));
+noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpeg')));
 noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 %BEGIN PHASE 3
@@ -177,13 +177,13 @@ while trial <= N_images
             x = -x;
         end
         if this_pic(3) == 'O' % if original
-            correct_movement = (x<=-.75) && (y>=-.1) && (y<=.75); %shwype
+            correct_movement = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
             inc1_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
-            inc2_movement = (x>=.75) && (y>=-.1) && (y<=.75); %sharp cross
+            inc2_movement = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
         else
             correct_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
-            inc1_movement = (x<=-.75) && (y>=-.1) && (y<=.75); %shwype
-            inc2_movement = (x>=.75) && (y>=-.1) && (y<=.75); %sharp cross
+            inc1_movement = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
+            inc2_movement = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
         end        
     end
     luck = rand;

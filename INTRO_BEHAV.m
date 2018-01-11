@@ -223,7 +223,7 @@ while ~done
         y=axis(joy, 2);
         pause(.05)
     end
-    goal = (x<=-.75) && (y>=-.75) && (y<=0); %shwype
+    goal = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -281,7 +281,7 @@ while ~done
         y=axis(joy, 2);
         pause(.05)
     end
-    goal = (x>=.75) && (y>=-.75) && (y<=0); %sharp cross
+    goal = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);

@@ -1,7 +1,8 @@
 % debug conditions
-debugging = true;
-joystick = false;
-running = 0;
+debugging = false;
+joystick = true;
+running = 17;
+SPEED = .1;
 % setting up your subject's folder
 if running == 17
     workingDir = '/Users/normanlab/THESIS';
@@ -203,7 +204,6 @@ end
 INSTANT = 0.001;
 slack  = ifi/2;
 stim.TRlength = 2;
-SPEED = 1;
 stim.fontSize = 24;
 stim.isiDuration = 2*SPEED;
 stim.scenarioDuration = 6*SPEED;

@@ -211,7 +211,7 @@ instruct = ['Now here are the three options against a double block, assuming you
     'Remember, here you do not move the joystick all the way forward!'];
 DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('DrawTexture', mainWindow,twoTest_texture,[0 0 test_PICDIMS],[test_topLeft test_topLeft+test_PICDIMS.*test_RESCALE_FACTOR]);
-test = '1. Try hitting the ball off the block out of bounds off the block by moving (and holding) the joystick slightly forward and all the way toward the left.';
+test = '1. Try hitting the ball off the block out of bounds off the block by moving (and holding) the joystick all the way toward the left.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 WaitSecs(2); 
@@ -269,7 +269,7 @@ instruct = ['Now here are the three options against a double block, assuming you
     'Remember, here you do not move the joystick all the way forward!'];
 DrawFormattedText(mainWindow,instruct,'center',test_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('DrawTexture', mainWindow,twoTest_texture,[0 0 test_PICDIMS],[test_topLeft test_topLeft+test_PICDIMS.*test_RESCALE_FACTOR]);
-test = '3. Try hitting the ball sharp across the court by moving (and holding) the joystick slightly forward and al the way toward the right.';
+test = '3. Try hitting the ball sharp across the court by moving (and holding) the joystick all the way toward the right.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 WaitSecs(2); 

@@ -162,7 +162,7 @@ while (trial <= max_trials)
             x = -x;
         end
         correct_movement = (x<=-.75) && (y<=-.75);   %full diagnal line
-        inc1_movement = (y<=-.5) && (x>=-.75)&&(x<=.75); %full straight
+        inc1_movement = (y<=-.75) && (x>=-.75)&&(x<=.75); %full straight
         inc2_movement = (x>=.75) && (y<=-.75); %full diagnal cross
     else
         Btrials = Btrials+1;

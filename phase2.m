@@ -134,12 +134,14 @@ P2_luck = {};
 
 %initiate variables
 trial = 1;
-Atrials =0;
-Btrials =0;
-Acorrect_trials = 0;
-Bcorrect_trials = 0;
-Aratio = 0;
-Bratio = 0;
+Ao_trials = 0;
+Bo_trials = 0;
+Ao_correct_trials = 0;
+Bo_correct_trials = 0;
+Av_trials = 0;
+Bv_trials = 0;
+Av_correct_trials = 0;
+Bv_correct_trials = 0;
 
 % RUN TRIALS
 while trial <= N_images
@@ -176,31 +178,33 @@ while trial <= N_images
     %set correct movements according to if in in A, B, A',B'
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'
-        Atrials = Atrials+1;
         %switch diagnal movements if antenna on right side
         if this_pic(2) == 'R'
             x = -x;
         end
         if this_pic(3) == 'O' % if original
-            correct_movement = (x<=-.75) && (y<=-.5);   %full diagnal line
-            inc1_movement = (y<=-.5) && (x>=-.75)&&(x<=.75); %full straight
-            inc2_movement = (x>=.75) && (y<=-.5); %full diagnal cross
+            Ao_trials = Ao_trials+1;
+            correct_movement = (x<=-.75) && (y<=-.75);   %full diagnal line
+            inc1_movement = (y<=-.75) && (x>=-.75)&&(x<=.75); %full straight
+            inc2_movement = (x>=.75) && (y<=-.75); %full diagnal cross
         else % if variant
-            correct_movement = (x>=.75) && (y<=-.5); %full diagnal cross
-            inc1_movement = (y<=-.5) && (x>=-.75)&&(x<=.75); %full straight
-            inc2_movement = (x<=-.75) && (y<=-.5);  %full diagnal line
+            Av_trials = Av_trials+1;
+            correct_movement = (x>=.75) && (y<=-.75); %full diagnal cross
+            inc1_movement = (y<=-.75) && (x>=-.75)&&(x<=.75); %full straight
+            inc2_movement = (x<=-.75) && (y<=-.75);  %full diagnal line
         end
     else %else in B
-        Btrials = Btrials+1;
         %switch diagnal movements if antenna on right side
         if this_pic(2) == 'R'
             x = -x;
         end
         if this_pic(3) == 'O' % if original
+            Bo_trials = Bo_trials+1;
             correct_movement = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
             inc1_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
             inc2_movement = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
         else % if variant
+            Bv_trials = Bv_trials+1;
             correct_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
             inc1_movement = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
             inc2_movement = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
@@ -221,10 +225,16 @@ while trial <= N_images
         end
         P2_response{trial} = 'correct';
         if this_pic(1) == 'A'
-            Acorrect_trials = Acorrect_trials+1;
-        else Bcorrect_trials = Bcorrect_trials+1;
+            if this_pic(3) == 'O' % if original
+                Ao_correct_trials = Ao_correct_trials+1;
+            else Av_correct_trials = Av_correct_trials+1;
+            end
+        else %in B
+            if this_pic(3) == 'O' % if original
+                Bo_correct_trials = Bo_correct_trials+1;
+            else Bv_correct_trials = Bv_correct_trials+1;
+            end
         end
-        
     elseif inc1_movement
         if luck < .2
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -279,11 +289,14 @@ ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 
 total_trials = trial - 1;
-Aratio = Acorrect_trials / Atrials;
-Bratio = Bcorrect_trials / Btrials;
+Ao_ratio = Ao_correct_trials / Ao_trials;
+Bo_ratio = Bo_correct_trials / Bo_trials;
+Av_ratio = Av_correct_trials / Av_trials;
+Bv_ratio = Bv_correct_trials / Bv_trials;
 
 save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
-    'P2_order','P2_response','P2_luck','Atrials','Btrials','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');
+    'P2_order','P2_response','P2_luck','Atrials','Btrials','Ao_correct_trials','Av_correct_trials',...
+    'Bo_correct_trials','Bv_correct_trials','Ao_ratio','Av_ratio','Bo_ratio','Bv_ratio');
 
 %present closing screen
 instruct = ['That completes the second phase! You may now take a brief break before phase three. Press enter when you are ready to continue.' ...

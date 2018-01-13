@@ -128,7 +128,7 @@ Screen('DrawTexture', mainWindow,oneTest_texture,[0 0 test_PICDIMS],[test_topLef
 test = '1. Try hitting toward the leftmost defender by moving the joystick all the way forward and all the way to the left.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
-WaitSecs(3); 
+WaitSecs(2); 
 done = 0; 
 while ~done 
     tEnd=GetSecs+2;
@@ -156,7 +156,7 @@ Screen('DrawTexture', mainWindow,oneTest_texture,[0 0 test_PICDIMS],[test_topLef
 test = '2. Try hitting straight ahead toward the middle defender by moving (and holding) the joystick all the way forward while keeping it centered.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
-WaitSecs(3); 
+WaitSecs(2); 
 done = 0; 
 while ~done
     tEnd=GetSecs+2;
@@ -185,7 +185,7 @@ Screen('DrawTexture', mainWindow,oneTest_texture,[0 0 test_PICDIMS],[test_topLef
 test = '3. Try hitting the ball to the rightmost defender by (and holding) the joystick all the way forward and all the way to the right.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
-WaitSecs(3); 
+WaitSecs(2); 
 done = 0; 
 while ~done
     tEnd=GetSecs+2;
@@ -214,7 +214,7 @@ Screen('DrawTexture', mainWindow,twoTest_texture,[0 0 test_PICDIMS],[test_topLef
 test = '1. Try hitting the ball off the block out of bounds off the block by moving (and holding) the joystick slightly forward and all the way toward the left.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
-WaitSecs(3); 
+WaitSecs(2); 
 done = 0; 
 while ~done
     tEnd=GetSecs+2;
@@ -243,7 +243,7 @@ Screen('DrawTexture', mainWindow,twoTest_texture,[0 0 test_PICDIMS],[test_topLef
 test = '2. Try tipping the ball just over the block by moving (and holding) the joystick slightly forward while keeping it centered.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
-WaitSecs(3); 
+WaitSecs(2); 
 done = 0; 
 while ~done
     tEnd=GetSecs+2;
@@ -272,7 +272,7 @@ Screen('DrawTexture', mainWindow,twoTest_texture,[0 0 test_PICDIMS],[test_topLef
 test = '3. Try hitting the ball sharp across the court by moving (and holding) the joystick slightly forward and al the way toward the right.';
 DrawFormattedText(mainWindow,test,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
-WaitSecs(3); 
+WaitSecs(2); 
 done = 0; 
 while ~done
     tEnd=GetSecs+2;
@@ -292,7 +292,16 @@ while ~done
     end
 end
 WaitSecs(2);
-train_time = GetSecs - instruct_time - start_time;
+
+
+
+
+
+
+
+
+
+
 
 %make sure they actually did it
 matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
@@ -301,7 +310,10 @@ if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 
+
+
 %save how long intro took
+train_time = GetSecs - instruct_time - start_time;
 total_time = GetSecs - start_time;
 save([ppt_dir matlabSaveFile],'SUBJ_NAME','instruct_time', 'train_time','total_time',...
     'intro_press1','intro_press2','intro_press3','intro_press4','intro_press5');  

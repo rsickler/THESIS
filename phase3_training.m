@@ -5,7 +5,7 @@
 function phase3_training(SUBJECT,SUBJ_NAME,SESSION)
 
 % STARTING EXPERIMENT
-SETUP; 
+SETUP;
 instruct = 'Loading Phase 3...';
 displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
@@ -109,10 +109,14 @@ stim.p3StartTime = waitForKeyboard(trigger,device);
 P3_order = scenario_sequence;
 P3_response = {};
 P3_luck = {};
-Atrials = 0; 
-Btrials = 0; 
-Acorrect_trials = 0; 
-Bcorrect_trials = 0; 
+Ao_trials = 0;
+Bo_trials = 0;
+Ao_correct_trials = 0;
+Bo_correct_trials = 0;
+Av_trials = 0;
+Bv_trials = 0;
+Av_correct_trials = 0;
+Bv_correct_trials = 0;
 
 %set up phase 3 specific timings
 config.nTrials = N_images;
@@ -156,35 +160,37 @@ while trial <= N_images
     %set correct movements according to if in in A, B, A',B'
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'
-        Atrials = Atrials+1;
         %switch diagnal movements if antenna on right side
         if this_pic(2) == 'R'
             x = -x;
         end
         if this_pic(3) == 'O' % if original
-            correct_movement = (x<=-.75) && (y<=0.1);   %full diagnal line
-            inc1_movement = (y<=.1) && (x>=-.75)&&(x<=.75); %full straight
-            inc2_movement = (x>=.75) && (y<=0.1); %full diagnal cross
+            Ao_trials = Ao_trials+1;
+            correct_movement = (x<=-.75) && (y<=-.75);   %full diagnal line
+            inc1_movement = (y<=-.75) && (x>=-.75)&&(x<=.75); %full straight
+            inc2_movement = (x>=.75) && (y<=-.75); %full diagnal cross
         else % if variant
-            correct_movement = (x>=.75) && (y<=0.1); %full diagnal cross 
-            inc1_movement = (y<=.1) && (x>=-.75)&&(x<=.75); %full straight
-            inc2_movement = (x<=-.75) && (y<=0.1);  %full diagnal line
+            Av_trials = Av_trials+1;
+            correct_movement = (x>=.75) && (y<=-.75); %full diagnal cross
+            inc1_movement = (y<=-.75) && (x>=-.75)&&(x<=.75); %full straight
+            inc2_movement = (x<=-.75) && (y<=-.75);  %full diagnal line
         end
     else %else in B
-        Btrials = Btrials+1;
         %switch diagnal movements if antenna on right side
         if this_pic(2) == 'R'
             x = -x;
         end
         if this_pic(3) == 'O' % if original
+            Bo_trials = Bo_trials+1;
             correct_movement = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
             inc1_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
             inc2_movement = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
         else
+            Bv_trials = Bv_trials+1;
             correct_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
             inc1_movement = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
             inc2_movement = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
-        end        
+        end
     end
     luck = rand;
     if correct_movement
@@ -199,11 +205,18 @@ while trial <= N_images
             Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
             P3_luck{trial} = 0;
         end
-        if this_pic(1) == 'A'
-            Acorrect_trials = Acorrect_trials+1;
-        else Bcorrect_trials = Bcorrect_trials+1;
-        end
         P3_response{trial} = 'correct';
+        if this_pic(1) == 'A'
+            if this_pic(3) == 'O' % if original
+                Ao_correct_trials = Ao_correct_trials+1;
+            else Av_correct_trials = Av_correct_trials+1;
+            end
+        else %in B
+            if this_pic(3) == 'O' % if original
+                Bo_correct_trials = Bo_correct_trials+1;
+            else Bv_correct_trials = Bv_correct_trials+1;
+            end
+        end
     elseif inc1_movement
         if luck < .2
             DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -237,7 +250,7 @@ while trial <= N_images
         P3_luck{trial} = -1;
     end
     timing.actualOnsets.feedback(trial) = Screen('Flip',mainWindow,timespec);
-        
+    
     %update trial
     trial= trial+1;
 end
@@ -248,7 +261,7 @@ timespec = timing.plannedOnsets.lastITI-slack;
 timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLACK,WRAPCHARS,timespec);
 WaitSecs(2);
 
-% SAVE SUBJECT DATA 
+% SAVE SUBJECT DATA
 % matlab save file
 matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
 data_dir = fullfile(workingDir, 'BehavioralData');
@@ -256,12 +269,15 @@ if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 
-total_trials = trial - 1; 
-Aratio = Acorrect_trials / Atrials;
-Bratio = Bcorrect_trials / Btrials;
+total_trials = trial - 1;
+Ao_ratio = Ao_correct_trials / Ao_trials;
+Bo_ratio = Bo_correct_trials / Bo_trials;
+Av_ratio = Av_correct_trials / Av_trials;
+Bv_ratio = Bv_correct_trials / Bv_trials;
 
 save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
-    'P3_order','P3_response','P3_luck','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
+    'P3_order','P3_response','P3_luck','Ao_correct_trials','Av_correct_trials',...
+    'Bo_correct_trials','Bv_correct_trials','Ao_ratio','Av_ratio','Bo_ratio','Bv_ratio');
 
 %present closing screen
 instruct = ['That completes the third phase! You may now take a brief break before phase four. Press enter when you are ready to continue.' ...

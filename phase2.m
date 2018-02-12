@@ -14,9 +14,6 @@ scenario_sequence = [];
 correct_sequence = [];
 inc1_sequence = [];
 inc2_sequence = [];
-correct_u_sequence = [];
-inc1_u_sequence = [];
-inc2_u_sequence = [];
 used_variants = zeros(1,N_v_images);
 
 % make series of 4 bundles of 10 (each variant image shown 1 time)
@@ -36,29 +33,17 @@ for i =1:4
                 inc1_bundle = cat(2,inc1_bundle, v_inc1s(ran2));
                 inc2_bundle = cat(2,og_inc2s, v_inc2s(ran1));
                 inc2_bundle = cat(2,inc2_bundle, v_inc2s(ran2));
-                correct_u_bundle = cat(2,og_corrects_u, v_corrects_u(ran1));
-                correct_u_bundle = cat(2,correct_u_bundle, v_corrects_u(ran2));
-                inc1_u_bundle = cat(2,og_inc1s_u, v_inc1s_u(ran1));
-                inc1_u_bundle = cat(2,inc1_u_bundle, v_inc1s_u(ran2));
-                inc2_u_bundle = cat(2,og_inc2s_u, v_inc2s_u(ran1));
-                inc2_u_bundle = cat(2,inc2_u_bundle, v_inc2s_u(ran2));
                 shuffler = randperm(10);
                 for i= 1:10
                     new_scenario_bundle(i) = scenario_bundle(shuffler(i));
                     new_correct_bundle(i) = correct_bundle(shuffler(i));
                     new_inc1_bundle(i) = inc1_bundle(shuffler(i));
                     new_inc2_bundle(i) = inc2_bundle(shuffler(i));
-                    new_correct_u_bundle(i) = correct_u_bundle(shuffler(i));
-                    new_inc1_u_bundle(i) = inc1_u_bundle(shuffler(i));
-                    new_inc2_u_bundle(i) = inc2_u_bundle(shuffler(i));
                 end
                 scenario_sequence = cat(2,scenario_sequence, new_scenario_bundle);
                 correct_sequence = cat(2,correct_sequence,new_correct_bundle);
                 inc1_sequence = cat(2,inc1_sequence, new_inc1_bundle);
                 inc2_sequence = cat(2,inc2_sequence, new_inc2_bundle);
-                correct_u_sequence = cat(2,correct_u_sequence,new_correct_u_bundle);
-                inc1_u_sequence = cat(2,inc1_u_sequence, new_inc1_u_bundle);
-                inc2_u_sequence = cat(2,inc2_u_sequence, new_inc2_u_bundle);
                 % tally use of variants
                 used_variants(ran1) = used_variants(ran1)+1;
                 used_variants(ran2) = used_variants(ran2)+1;
@@ -81,17 +66,11 @@ for i = 1:N_images
         correct_Folder = og_correct_Folder;
         inc1_Folder = og_inc1_Folder;
         inc2_Folder = og_inc2_Folder;
-        correct_u_Folder = og_correct_u_Folder;
-        inc1_u_Folder = og_inc1_u_Folder;
-        inc2_u_Folder = og_inc2_u_Folder;
     else
         scenario_Folder = v_scenario_Folder;
         correct_Folder = v_correct_Folder;
         inc1_Folder = v_inc1_Folder;
         inc2_Folder = v_inc2_Folder;
-        correct_u_Folder = v_correct_u_Folder;
-        inc1_u_Folder = v_inc1_u_Folder;
-        inc2_u_Folder = v_inc2_u_Folder;
     end
     scenario_matrix = double(imread(fullfile(scenario_Folder,scenario_sequence{i})));
     scenario_texture(i) = Screen('MakeTexture', mainWindow, scenario_matrix);
@@ -101,12 +80,6 @@ for i = 1:N_images
     inc1_texture(i) = Screen('MakeTexture', mainWindow, inc1_matrix);
     inc2_matrix = double(imread(fullfile(inc2_Folder,inc2_sequence{i})));
     inc2_texture(i) = Screen('MakeTexture', mainWindow, inc2_matrix);
-    correct_u_matrix = double(imread(fullfile(correct_u_Folder,correct_u_sequence{i})));
-    correct_u_texture(i) = Screen('MakeTexture', mainWindow, correct_u_matrix);
-    inc1_u_matrix = double(imread(fullfile(inc1_u_Folder,inc1_u_sequence{i})));
-    inc1_u_texture(i) = Screen('MakeTexture', mainWindow, inc1_u_matrix);
-    inc2_u_matrix = double(imread(fullfile(inc2_u_Folder,inc2_u_sequence{i})));
-    inc2_u_texture(i) = Screen('MakeTexture', mainWindow, inc2_u_matrix);
 end
 % make nonresponse texture
 stimuliFolder = fullfile(workingDir, 'stimuli');
@@ -130,7 +103,6 @@ runStart = GetSecs;
 % set structure for reading responses
 P2_order = scenario_sequence;
 P2_response = {};
-P2_luck = {};
 
 %initiate variables
 trial = 1;
@@ -210,19 +182,10 @@ while trial <= N_images
             inc2_movement = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
         end
     end
-    luck = rand;
     if correct_movement
-        if luck > .2
-            DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
-            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
-            P1_luck{trial} = 1;
-        else
-            DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, correct_u_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
-            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
-            P1_luck{trial} = 0;
-        end
+        DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
         P2_response{trial} = 'correct';
         if this_pic(1) == 'A'
             if this_pic(3) == 'O' % if original
@@ -236,36 +199,19 @@ while trial <= N_images
             end
         end
     elseif inc1_movement
-        if luck < .2
-            DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, inc1_u_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
-            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
-            P1_luck{trial} = 1;
-        else
-            DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, inc1_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
-            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
-            P1_luck{trial} = 1;
-        end
+        DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, inc1_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
         P2_response{trial} = 'incorrect1';
     elseif inc2_movement
-        if luck < .2
-            DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, inc2_u_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
-            Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
-            P1_luck{trial} = 1;
-        else
-            DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('DrawTexture', mainWindow, inc2_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
-            Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
-            P1_luck{trial} = 0;
-        end
+        DrawFormattedText(mainWindow,'+0','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, inc2_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
         P2_response{trial} = 'incorrect2';
     else
         DrawFormattedText(mainWindow,'IMPROPER RESPONSE \n\n ---Remember to HOLD it!---','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
         Screen('DrawTexture', mainWindow,noresponse_texture,[0 0 NR_PICDIMS],[NR_topLeft NR_topLeft+NR_PICDIMS.*NR_RESCALE_FACTOR]);
         P2_response{trial} = 'improp response';
-        P1_luck{trial} = -1;
     end
     timing.actualOnsets.feedback(trial) = Screen('Flip',mainWindow,timespec);
     %update trial
@@ -295,7 +241,7 @@ Av_ratio = Av_correct_trials / Av_trials;
 Bv_ratio = Bv_correct_trials / Bv_trials;
 
 save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
-    'P2_order','P2_response','P2_luck','Ao_correct_trials','Av_correct_trials',...
+    'P2_order','P2_response','Ao_correct_trials','Av_correct_trials',...
     'Bo_correct_trials','Bv_correct_trials','Ao_ratio','Av_ratio','Bo_ratio','Bv_ratio');
 
 %present closing screen

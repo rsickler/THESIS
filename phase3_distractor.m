@@ -37,7 +37,7 @@ cond_map = makeMap({'even', 'odd'});
 % GIVE INTRO
 %explanation of task 
 instruct = ['you will be performing addition of three numbers'...
-    '\n\n-- press "enter" to continue --'];
+    '\n\n-- press "space" to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 press1 = waitForKeyboard(trigger,device);
@@ -91,7 +91,7 @@ save([ppt_dir matlabSaveFile], 'stim', 'timing', 'digitAcc','digitRT','actualOns
 
 %present closing screen
 instruct = ['That completes the third phase! You may now take a brief break before phase four. Press enter when you are ready to continue.' ...
-    '\n\n\n\n -- press "enter" to continue --'];
+    '\n\n\n\n -- press "space" to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 end_press = waitForKeyboard(trigger,device);

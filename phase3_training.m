@@ -81,7 +81,7 @@ noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 %BEGIN PHASE 3
 % give instructions, wait to begin
 instruct = ['Would you like to start phase 3?' ...
-    '\n\n-- press "enter" to begin --'];
+    '\n\n-- press "space" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p3StartTime = waitForKeyboard(trigger,device);
 % create structure for storing responses
@@ -233,7 +233,7 @@ save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
 
 %present closing screen
 instruct = ['That completes the third phase! You may now take a brief break before phase four. Press enter when you are ready to continue.' ...
-    '\n\n\n\n -- press "enter" to continue --'];
+    '\n\n\n\n -- press "space" to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 end_press = waitForKeyboard(trigger,device);

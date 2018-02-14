@@ -1,3 +1,46 @@
+%setup
+og_correct_u_Folder = fullfile(workingDir, 'stimuli/og_correct_u');
+og_correct_u_dir = dir(fullfile(og_correct_u_Folder));
+og_corrects_u = {};
+for i = 4:length(og_correct_u_dir)
+    og_corrects_u{i-3} = og_correct_u_dir(i).name;
+end
+
+og_inc1_u_Folder = fullfile(workingDir, 'stimuli/og_inc1_u');
+og_inc1_u_dir = dir(fullfile(og_inc1_u_Folder));
+og_inc1s_u = {};
+for i = 4:length(og_inc1_u_dir)
+    og_inc1s_u{i-3} = og_inc1_u_dir(i).name;
+end
+
+og_inc2_u_Folder = fullfile(workingDir, 'stimuli/og_inc2_u');
+og_inc2_u_dir = dir(fullfile(og_inc2_u_Folder));
+og_inc2s_u = {};
+for i = 4:length(og_inc2_u_dir)
+    og_inc2s_u{i-3} = og_inc2_u_dir(i).name;
+end
+
+v_correct_u_Folder = fullfile(workingDir, 'stimuli/v_correct_u');
+v_correct_u_dir = dir(fullfile(v_correct_u_Folder));
+v_corrects_u = {};
+for i = 4:length(v_correct_u_dir)
+    v_corrects_u{i-3} = v_correct_u_dir(i).name;
+end
+v_inc1_u_Folder = fullfile(workingDir, 'stimuli/v_inc1_u');
+v_inc1_u_dir = dir(fullfile(v_inc1_u_Folder));
+v_inc1s_u = {};
+for i = 4:length(v_inc1_u_dir)
+    v_inc1s_u{i-3} = v_inc1_u_dir(i).name;
+end
+v_inc2_u_Folder = fullfile(workingDir, 'stimuli/v_inc2_u');
+v_inc2_u_dir = dir(fullfile(v_inc2_u_Folder));
+v_inc2s_u = {};
+for i = 4:length(v_inc2_u_dir)
+    v_inc2s_u{i-3} = v_inc2_u_dir(i).name;
+end
+
+
+%maincode
 correct_u_sequence = [];
 inc1_u_sequence = [];
 inc2_u_sequence = [];

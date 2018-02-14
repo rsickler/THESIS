@@ -1,8 +1,8 @@
 % debug conditions
-debugging = false;
+debugging = true;
 joystick = true;
-running = 17;
-SPEED = .1;
+running = 1;
+SPEED = 1;
 % setting up your subject's folder
 if running == 17
     workingDir = '/Users/normanlab/THESIS';
@@ -17,9 +17,6 @@ DEBUG_MONITOR_SIZE = [2560 1600]/4;
 DEFAULT_MONITOR_SIZE = [1024 768];
 AssertOpenGL;
 MAINFONT = 'Arial';
-trigger = 'Return';
-trigger = KbName(trigger);
-scan_trigger = '='; % skyra PST
 subjectDir = [];
 fmri = 0;
 % seed
@@ -38,8 +35,9 @@ WRAPCHARS = 70;
 % default keypress handling
 device = -1;
 KbName('UnifyKeyNames');
-press = 'Return';
+press = 'Space';
 trigger = KbName(press);
+scan_trigger = '='; % skyra PST
 
 % OPEN SCREEN
 ListenChar(2); % disables keyboard input to Matlab command window
@@ -116,28 +114,6 @@ for i = 4:length(og_inc2_dir)
     og_inc2s{i-3} = og_inc2_dir(i).name;
 end
 
-og_correct_u_Folder = fullfile(workingDir, 'stimuli/og_correct_u');
-og_correct_u_dir = dir(fullfile(og_correct_u_Folder));
-og_corrects_u = {};
-for i = 4:length(og_correct_u_dir)
-    og_corrects_u{i-3} = og_correct_u_dir(i).name;
-end
-
-og_inc1_u_Folder = fullfile(workingDir, 'stimuli/og_inc1_u');
-og_inc1_u_dir = dir(fullfile(og_inc1_u_Folder));
-og_inc1s_u = {};
-for i = 4:length(og_inc1_u_dir)
-    og_inc1s_u{i-3} = og_inc1_u_dir(i).name;
-end
-
-og_inc2_u_Folder = fullfile(workingDir, 'stimuli/og_inc2_u');
-og_inc2_u_dir = dir(fullfile(og_inc2_u_Folder));
-og_inc2s_u = {};
-for i = 4:length(og_inc2_u_dir)
-    og_inc2s_u{i-3} = og_inc2_u_dir(i).name;
-end
-
-
 % create variant directories and lists
 v_scenario_Folder = fullfile(workingDir, 'stimuli/v_scenario');
 v_scenario_dir = dir(fullfile(v_scenario_Folder));
@@ -163,28 +139,6 @@ v_inc2s = {};
 for i = 4:length(v_inc2_dir)
     v_inc2s{i-3} = v_inc2_dir(i).name;
 end
-
-v_correct_u_Folder = fullfile(workingDir, 'stimuli/v_correct_u');
-v_correct_u_dir = dir(fullfile(v_correct_u_Folder));
-v_corrects_u = {};
-for i = 4:length(v_correct_u_dir)
-    v_corrects_u{i-3} = v_correct_u_dir(i).name;
-end
-v_inc1_u_Folder = fullfile(workingDir, 'stimuli/v_inc1_u');
-v_inc1_u_dir = dir(fullfile(v_inc1_u_Folder));
-v_inc1s_u = {};
-for i = 4:length(v_inc1_u_dir)
-    v_inc1s_u{i-3} = v_inc1_u_dir(i).name;
-end
-v_inc2_u_Folder = fullfile(workingDir, 'stimuli/v_inc2_u');
-v_inc2_u_dir = dir(fullfile(v_inc2_u_Folder));
-v_inc2s_u = {};
-for i = 4:length(v_inc2_u_dir)
-    v_inc2s_u{i-3} = v_inc2_u_dir(i).name;
-end
-%count images
-N_og_images = length(og_scenarios);
-N_v_images = length(v_scenarios);
 
 % GETTING INPUT FROM PERSON
 stim.num_realtime = 10;

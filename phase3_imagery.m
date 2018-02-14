@@ -106,14 +106,14 @@ instruct = ['you will be performing mental imagery of...'...
     'imagine yourself in the described scenario performing the given motion...'...
     'as vividly as you can?.think of side of court, faces of opponent,' ...
     'bla bla bla' ...
-    '\n\n-- press "enter" to continue --'];
+    '\n\n-- press "space" to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 press1 = waitForKeyboard(trigger,device);
 
 %explain visualization rating
 instruct = ['you will see this image...'];
-cont = ['-- press "enter" to continue --'];
+cont = ['-- press "space" to continue --'];
 intro_textRow = windowSize.pixels(2) *(.05);
 intro_picRow = windowSize.pixels(2) *(.65);
 cont_textRow = windowSize.pixels(2) *(.93); 
@@ -125,7 +125,7 @@ press2 = waitForKeyboard(trigger,device);
 
 %prompt for beginning
 instruct = ['Would you like to start?' ...
-    '\n\n-- press "enter" to begin --'];
+    '\n\n-- press "space" to begin --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 press3 = waitForKeyboard(trigger,device);
@@ -243,7 +243,7 @@ save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
 
 %present closing screen
 instruct = ['That completes the third phase! You may now take a brief break before phase four. Press enter when you are ready to continue.' ...
-    '\n\n\n\n -- press "enter" to continue --'];
+    '\n\n\n\n -- press "space" to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 end_press = waitForKeyboard(trigger,device);

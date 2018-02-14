@@ -145,9 +145,9 @@ while ~done
         DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         Screen('Flip',mainWindow, INSTANT);
     end
-    pause(.05)
 end
 WaitSecs(2); 
+
 
 
 % 2. no blocker left- hit cross court
@@ -159,15 +159,20 @@ Screen('Flip',mainWindow, INSTANT);
 done = 0; 
 good = 'Good!';
 while ~done 
-    x=axis(joy, 1);
-    y=axis(joy, 2);
-    goal = (x>=.75) && (y<=-.75); %full diagnal cross
+    tEnd=GetSecs+2;
+    while GetSecs<tEnd
+        x=axis(joy, 1);
+        y=axis(joy, 2);
+        pause(.05)
+    end
+    goal = (x<=-.75) && (y<=0.5); %full diagnal cross
     if goal
         done = 1; 
-        DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        Screen('Flip',mainWindow, INSTANT);
+        DrawFormattedText(mainWindow,good,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, og_correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+        Screen('Flip',mainWindow, INSTANT);s
     end
-    pause(.05)
 end
 WaitSecs(2); 
 
@@ -180,19 +185,24 @@ Screen('Flip',mainWindow, INSTANT);
 done = 0; 
 good = 'Good!';
 while ~done 
-    x=axis(joy, 1);
-    y=axis(joy, 2);
+    tEnd=GetSecs+2;
+    while GetSecs<tEnd
+        x=axis(joy, 1);
+        y=axis(joy, 2);
+        pause(.05)
+    end
     %switch diagnal movements if antenna on right side
     if this_pic(2) == 'R'
         x = -x;
     end
-    goal = (x<=-.75) && (y<=-.75); %full diagnal line
+    goal = (x<=-.75) && (y<=0.5); %full diagnal line
     if goal
         done = 1; 
-        DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        Screen('Flip',mainWindow, INSTANT);
+        DrawFormattedText(mainWindow,good,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, og_correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+        Screen('Flip',mainWindow, INSTANT);s
     end
-    pause(.05)
 end
 WaitSecs(2); 
 
@@ -205,19 +215,24 @@ Screen('Flip',mainWindow, INSTANT);
 done = 0; 
 good = 'Good!';
 while ~done 
-    x=axis(joy, 1);
-    y=axis(joy, 2);
+    tEnd=GetSecs+2;
+    while GetSecs<tEnd
+        x=axis(joy, 1);
+        y=axis(joy, 2);
+        pause(.05)
+    end
     %switch diagnal movements if antenna on right side
     if this_pic(2) == 'R'
         x = -x;
     end
-    goal = (y<=-.75) && (x>=-.75)&&(x<=.75); %full straight
+    goal = (x<=-.75) && (y<=0.5); %full diagnal line
     if goal
         done = 1; 
-        DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        Screen('Flip',mainWindow, INSTANT);
+        DrawFormattedText(mainWindow,good,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, og_correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+        Screen('Flip',mainWindow, INSTANT);s
     end
-    pause(.05)
 end
 WaitSecs(2); 
 
@@ -230,15 +245,20 @@ Screen('Flip',mainWindow, INSTANT);
 done = 0; 
 good = 'Good!';
 while ~done 
-    x=axis(joy, 1);
-    y=axis(joy, 2);
-    goal = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
+    tEnd=GetSecs+2;
+    while GetSecs<tEnd
+        x=axis(joy, 1);
+        y=axis(joy, 2);
+        pause(.05)
+    end
+    goal = (x<=-.75) && (y<=0.5); %full diagnal line
     if goal
         done = 1; 
-        DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        Screen('Flip',mainWindow, INSTANT);
+        DrawFormattedText(mainWindow,good,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, og_correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+        Screen('Flip',mainWindow, INSTANT);s
     end
-    pause(.05)
 end
 WaitSecs(2); 
 
@@ -251,15 +271,20 @@ Screen('Flip',mainWindow, INSTANT);
 done = 0; 
 good = 'Good!';
 while ~done 
-    x=axis(joy, 1);
-    y=axis(joy, 2);
-    goal = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
+    tEnd=GetSecs+2;
+    while GetSecs<tEnd
+        x=axis(joy, 1);
+        y=axis(joy, 2);
+        pause(.05)
+    end
+    goal = (x<=-.75) && (y<=0.5); %full diagnal line
     if goal
         done = 1; 
-        DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        Screen('Flip',mainWindow, INSTANT);
+        DrawFormattedText(mainWindow,good,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, og_correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+        Screen('Flip',mainWindow, INSTANT);s
     end
-    pause(.05)
 end
 WaitSecs(2); 
 
@@ -272,19 +297,24 @@ Screen('Flip',mainWindow, INSTANT);
 done = 0; 
 good = 'Good!';
 while ~done 
-    x=axis(joy, 1);
-    y=axis(joy, 2);
+    tEnd=GetSecs+2;
+    while GetSecs<tEnd
+        x=axis(joy, 1);
+        y=axis(joy, 2);
+        pause(.05)
+    end
     %switch diagnal movements if antenna on right side
     if this_pic(2) == 'R'
         x = -x;
     end
-    goal = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
+    goal = (x<=-.75) && (y<=0.5); %full diagnal line
     if goal
         done = 1; 
-        DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        Screen('Flip',mainWindow, INSTANT);
+        DrawFormattedText(mainWindow,good,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, og_correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+        Screen('Flip',mainWindow, INSTANT);s
     end
-    pause(.05)
 end
 WaitSecs(2); 
 
@@ -297,22 +327,26 @@ Screen('Flip',mainWindow, INSTANT);
 done = 0; 
 good = 'Good!';
 while ~done 
-    x=axis(joy, 1);
-    y=axis(joy, 2);
+    tEnd=GetSecs+2;
+    while GetSecs<tEnd
+        x=axis(joy, 1);
+        y=axis(joy, 2);
+        pause(.05)
+    end
     %switch diagnal movements if antenna on right side
     if this_pic(2) == 'R'
         x = -x;
     end
-    goal = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
+    goal = (x<=-.75) && (y<=0.5); %full diagnal line
     if goal
         done = 1; 
-        DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        Screen('Flip',mainWindow, INSTANT);
+        DrawFormattedText(mainWindow,good,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow, og_correct_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
+        Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
+        Screen('Flip',mainWindow, INSTANT);s
     end
-    pause(.05)
 end
 WaitSecs(2); 
-
 
 %%
 %FINAL STRINGS

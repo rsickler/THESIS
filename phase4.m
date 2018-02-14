@@ -68,7 +68,7 @@ runStart = GetSecs;
 
 % give cue, wait to begin
 instruct = ['Would you like to begin Phase 4?' ...
-    '\n\n-- press "enter" to begin --'];
+    '\n\n-- press "space" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p4StartTime = waitForKeyboard(trigger,device);
 

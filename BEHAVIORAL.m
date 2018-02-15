@@ -1,10 +1,9 @@
 %%% Master code for initial running room behavioral session. 
 % phase4+phase3+phase2+phase1+intro 
-% 6.4 + 3.7 + 9.3 + 9.3 + 5 = = 33.7 minutes
-
+% 6.4 + 7.4 + 9.3 + 9.3 + 10 = = 42.4 minutes
 
 % % INTRO
-SUBJECT = 100;
+SUBJECT = 999;
 SUBJ_NAME = num2str(SUBJECT);
 TASK = 1;
 

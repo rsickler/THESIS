@@ -1,5 +1,5 @@
-%%% This code is for the phase 3 NONDIRECTED visualization session in the
-%%% scanner, with even ratio of original:variant and feedback given.
+%%% This code is for the phase 3 DIRECTED visualization session,
+%%% with even ratio of original:variant and feedback given.
 % 2s --> 3s --> 3s --> 4s --> 2s
 
 function phase3_imagery(SUBJECT,SUBJ_NAME,SESSION)

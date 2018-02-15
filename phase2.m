@@ -1,6 +1,7 @@
 %%% phase 2 is initial addition of variants to originals, at 1:4 ratio.
 % 2s --> 6s ----> 4s --> 2s
 % 4 bundles of 10 => 9.3 minutes
+% 8 originals:2 variants (1:4 ratio)
 
 function phase2(SUBJECT,SUBJ_NAME,SESSION)
 
@@ -89,8 +90,7 @@ noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 % BEGIN PHASE 2
 instruct = ['Would you like to start Phase 2?' ...
     '\n\n Remember to look at the color jersey the opponent team is wearing- '...
-    'the best response for one color team may not be the same as for a different color team.'...
-    'What color team you are playing matters!' ...
+    'the correct response for one color team may not be the same as for a different color team!'...
     '\n\n --  press "space" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p2StartTime = waitForKeyboard(trigger,device);
@@ -139,7 +139,7 @@ while trial <= N_images
     %feedback
     timespec = timing.plannedOnsets.feedback(trial)-slack;
     %record trajectory
-    tEnd=GetSecs+2;
+    tEnd=GetSecs+4;
     while GetSecs<tEnd
         x=axis(joy, 1);
         y=axis(joy, 2);

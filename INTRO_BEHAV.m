@@ -19,8 +19,6 @@ intro_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (intro_PICDIMS(HORIZONTAL)*intr
 intro_topLeft(VERTICAL) = intro_picRow - (intro_PICDIMS(VERTICAL)*intro_RESCALE_FACTOR(VERTICAL))/2;
 
 %create original scenario folder for intro training
-N_og_images = length(og_scenarios);
-N_v_images = length(v_scenarios);
 for i = 1:N_og_images
     og_scenario_matrix = double(imread(fullfile(og_scenario_Folder,og_scenarios{i})));
     og_scenario_texture(i) = Screen('MakeTexture', mainWindow, og_scenario_matrix);
@@ -97,8 +95,8 @@ instruct = ['When presented with each scenario, you will have 6 seconds to proce
     'one color team may not be the same for a different color team.'...
     '\n\n During this 6 second window, you should think about what '...
     'movement you will make, but do not move the joystick yet. After the 6 seconds are up, '...
-    'you will then be given a "GO" cue, after which you will have 2 seconds to make your movement. '...
-    'Move and HOLD the joystick in the position you want until the 2 seconds are up.'...
+    'you will then be given a "GO" cue, after which you will have 4 seconds to make your movement. '...
+    'Move and HOLD the joystick in the position you want until the 4 seconds are up.'...
     '\n\n -- press "space" to continue --'];
 
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -131,7 +129,7 @@ intro_press1 = waitForKeyboard(trigger,device);
 % 1. no blocker left- hit line
 instruct = ['Here is an example of the no blocker scenario against a white team.\n Try hitting toward the leftmost person! '...
    '\n (Hint: move joystick all the way forward and to the left)']; 
-DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, og_scenario_texture(1), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
 done = 0; 
@@ -153,7 +151,7 @@ WaitSecs(2);
 % 2. no blocker left- hit cross court
 instruct = ['Here is another example of the no blocker scenario against a white team.\n Try hitting toward the rightmost person. '...
    '\n (Hint: move joystick all the way forward and to the right)']; 
-DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, og_scenario_texture(2), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
 done = 0; 
@@ -174,7 +172,7 @@ WaitSecs(2);
 % 3. no blocker right- hit line
 instruct = ['Here is another example of the no blocker scenario against a white team.\n Try hitting toward the rightmost person. '...
    '\n (Hint: move joystick all the way forward and to the right)']; 
-DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, og_scenario_texture(3), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
 done = 0; 
@@ -183,9 +181,7 @@ while ~done
     x=axis(joy, 1);
     y=axis(joy, 2);
     %switch diagnal movements if antenna on right side
-    if this_pic(2) == 'R'
-        x = -x;
-    end
+    x = -x;
     goal = (x<=-.75) && (y<=-.75); %full diagnal line
     if goal
         done = 1; 
@@ -208,9 +204,7 @@ while ~done
     x=axis(joy, 1);
     y=axis(joy, 2);
     %switch diagnal movements if antenna on right side
-    if this_pic(2) == 'R'
-        x = -x;
-    end
+    x = -x;
     goal = (y<=-.75) && (x>=-.75)&&(x<=.75); %full straight
     if goal
         done = 1; 
@@ -224,7 +218,7 @@ WaitSecs(2);
 % 5. double blocker left- shwype
 instruct = ['Here is an example of the two blocker scenario against an orange team.\n Try hitting to the left off the blockers hands. '...
    '\n (Hint: move joystick all the way to the left, but not forwards or backwards)']; 
-DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, og_scenario_texture(5), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
 done = 0; 
@@ -245,7 +239,7 @@ WaitSecs(2);
 % 6. double blocker left- hit cross
 instruct = ['Here is another example of the two blocker scenario against an orange team.\n Try hitting to the right off the blockers hands. '...
    '\n (Hint: move joystick all the way to the right, but not forwards or backwards)']; 
-DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, og_scenario_texture(6), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
 done = 0; 
@@ -266,7 +260,7 @@ WaitSecs(2);
 % 7. double blocker right- shwype
 instruct = ['Here is another example of the two blocker scenario against an orange team.\n Try hitting to the right off the blockers hands. '...
    '\n (Hint: move joystick all the way to the right, but not forwards or backwards)']; 
-DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, og_scenario_texture(7), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
 done = 0; 
@@ -275,9 +269,7 @@ while ~done
     x=axis(joy, 1);
     y=axis(joy, 2);
     %switch diagnal movements if antenna on right side
-    if this_pic(2) == 'R'
-        x = -x;
-    end
+    x = -x;
     goal = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
     if goal
         done = 1; 
@@ -291,7 +283,7 @@ WaitSecs(2);
 % 8. double blocker right- tip
 instruct = ['Here is another example of the two blocker scenario against an orange team.\n Try gently tipping the ball straight over the blockers. '...
    '\n (Hint: move joystick slightly forward while keeping it centered)']; 
-DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, og_scenario_texture(8), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
 done = 0; 
@@ -300,9 +292,7 @@ while ~done
     x=axis(joy, 1);
     y=axis(joy, 2);
     %switch diagnal movements if antenna on right side
-    if this_pic(2) == 'R'
-        x = -x;
-    end
+    x = -x;
     goal = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
     if goal
         done = 1; 

@@ -78,6 +78,7 @@ noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
 % ----BEGIN PHASE 1 ----
 instruct = ['Would you like to begin Phase 1?'...
+    '\n\n Remember to look at the color jersey the opponent team is wearing and to HOLD the joystick where you moved it until feedback is given! '...
     '\n\n\n\n -- press "space" to continue --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p1StartTime = waitForKeyboard(trigger,device);
@@ -126,7 +127,7 @@ while (trial <= max_trials)
     %feedback
     timespec = timing.plannedOnsets.feedback(trial)-slack;
     %record trajectory and final (x,y) at end of 2 secs
-    tEnd=GetSecs+2;
+    tEnd=GetSecs+4;
     while GetSecs<tEnd
         x=axis(joy, 1);
         y=axis(joy, 2);
@@ -185,7 +186,7 @@ while (trial <= max_trials)
     Aratio = Acorrect_trials / Atrials;
     Bratio = Bcorrect_trials / Btrials;
     %if both are good, and met minumum trial count, end loop!
-    if (Aratio > .8) && (Bratio > .8) && (trial > min_trials)
+    if (Aratio > .8) && (Bratio > .8) && (trial >= min_trials)
         WaitSecs(2);
         break
     end
@@ -205,10 +206,8 @@ data_dir = fullfile(workingDir, 'BehavioralData');
 if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
-%fix trial count if went to max
-if trial > max_trials
-    trial = trial-1;
-end
+%fix trial count 
+trial = trial-1;
 %save important variables
 save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim', 'timing','trial','P1_order',...
     'P1_response','Atrials','Btrials','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  

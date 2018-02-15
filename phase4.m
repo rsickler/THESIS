@@ -103,7 +103,7 @@ while trial <= N_images
     timespec = timing.plannedOnsets.go(trial)-slack;
     timing.actualOnsets.go(trial) = start_time_func(mainWindow,'GO!','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
     %record trajectory
-    tEnd=GetSecs+2;
+    tEnd=GetSecs+4;
     while GetSecs<tEnd
         x=axis(joy, 1);
         y=axis(joy, 2);

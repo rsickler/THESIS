@@ -3,6 +3,7 @@ debugging = true;
 joystick = true;
 running = 1;
 SPEED = 1;
+
 % setting up your subject's folder
 if running == 17
     workingDir = '/Users/normanlab/THESIS';
@@ -81,7 +82,7 @@ s_RESCALE_FACTOR = pic_size./s_PICDIMS;
 s_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (s_PICDIMS(HORIZONTAL)*s_RESCALE_FACTOR(HORIZONTAL))/2;
 s_topLeft(VERTICAL) = stim.picRow - (s_PICDIMS(VERTICAL)*s_RESCALE_FACTOR(VERTICAL))/2;
 %non-response photo
-NR_PICDIMS = [704 848];
+NR_PICDIMS = [1024 768];
 NR_RESCALE_FACTOR = pic_size./NR_PICDIMS;
 NR_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (NR_PICDIMS(HORIZONTAL)*NR_RESCALE_FACTOR(HORIZONTAL))/2;
 NR_topLeft(VERTICAL) = stim.picRow - (NR_PICDIMS(VERTICAL)*NR_RESCALE_FACTOR(VERTICAL))/2;
@@ -139,6 +140,9 @@ v_inc2s = {};
 for i = 4:length(v_inc2_dir)
     v_inc2s{i-3} = v_inc2_dir(i).name;
 end
+
+N_og_images = length(og_scenarios);
+N_v_images = length(v_scenarios);
 
 % GETTING INPUT FROM PERSON
 stim.num_realtime = 10;

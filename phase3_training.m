@@ -1,7 +1,8 @@
 %%% phase 3 (in scanner) is continued training of variants and originals together,
 %%% but this time at even ratios. This version has feedback.
 % 2s --> 6s ----> 4s --> 2s
-% all 16 once each => 3.7 minutes
+% all 16 images seen 2x each => 7.4 minutes
+
 function phase3_training(SUBJECT,SUBJ_NAME,SESSION)
 
 % STARTING EXPERIMENT
@@ -11,7 +12,7 @@ displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCH
 
 % PSEUDO-RANDOMIZE
 %pseudorandomize all originals and variants in blocks of 4, using all 16
-% images once each
+% images twice each
 all_scenarios =  cat(2,og_scenarios, v_scenarios);
 all_corrects = cat(2,og_corrects, v_corrects);
 all_inc1s = cat(2,og_inc1s, v_inc1s);
@@ -22,7 +23,7 @@ correct_sequence = [];
 inc1_sequence = [];
 inc2_sequence = [];
 
-nQuads = 4;
+nQuads = 8;
 for T = 1:nQuads
     ORDER = randperm(4);
     for i = 1:4
@@ -127,7 +128,7 @@ while trial <= N_images
     %feedback
     timespec = timing.plannedOnsets.feedback(trial)-slack;
     %record trajectory
-    tEnd=GetSecs+2;
+    tEnd=GetSecs+4;
     while GetSecs<tEnd
         x=axis(joy, 1);
         y=axis(joy, 2);

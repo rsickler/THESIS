@@ -1,7 +1,7 @@
 % debug conditions
-debugging = true;
+debugging = false;
 joystick = true;
-running = 1;
+running = 17;
 SPEED = 1;
 
 % setting up your subject's folder

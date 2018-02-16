@@ -3,6 +3,11 @@ function INTRO_BEHAV(SUBJECT,SUBJ_NAME,SESSION)
 %SETUP 
 SETUP; 
 
+% make nonresponse texture
+stimuliFolder = fullfile(workingDir, 'stimuli');
+noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpeg')));
+noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
+
 %loading intro photos
 otherFolder = fullfile(workingDir, 'stimuli/other');
 noBlocker_matrix = double(imread(fullfile(otherFolder,'noBlocker.jpeg')));
@@ -107,11 +112,12 @@ instruct = ['You will then be shown the outcome of your decision. The correct ch
     'while the other choices will not earn you any points. '...
     'Choices that earned a point will be highlighted in green, '...
     'and choices that did not earn you a point will be highlighted in red. '...
-    '\n\n \n\n If you do not pick one of three proper response options for the specific scenario presented, you will be given an overview of the response options for the two scenarios'...
-    'and you will not earn any points. The more points you finish with the better, '...
+    '\n\n \n\n If you do not pick one of three proper response options for the specific scenario presented, you will be given an overview of the response options for the two scenarios,'...
+    'shown below, and you will not earn any points. The more points you finish with the better, '...
     'so make sure to try your best!'...
     '\n\n -- press "space" to continue --'];
-DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,intro_textRow,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('DrawTexture', mainWindow,noresponse_texture,[0 0 NR_PICDIMS],[NR_topLeft NR_topLeft+NR_PICDIMS.*NR_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
 intro_press5 = waitForKeyboard(trigger,device);
 instruct_time = GetSecs - start_time;

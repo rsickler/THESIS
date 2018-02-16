@@ -180,7 +180,7 @@ while (trial <= max_trials)
         Screen('FrameRect', mainWindow, COLORS.RED,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],10);
         P1_response{trial} = 'incorrect2';
     else
-        DrawFormattedText(mainWindow,'IMPROPER RESPONSE \n\n ---Remember to HOLD it!---','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        DrawFormattedText(mainWindow,'IMPROPER RESPONSE \n\n ---Remember to HOLD the joystick in place!---','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
         Screen('DrawTexture', mainWindow,noresponse_texture,[0 0 NR_PICDIMS],[NR_topLeft NR_topLeft+NR_PICDIMS.*NR_RESCALE_FACTOR]);
         P1_response{trial} = 'improp response';
     end

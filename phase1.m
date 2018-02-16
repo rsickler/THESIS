@@ -153,7 +153,7 @@ while (trial <= max_trials)
             x = -x;
         end
         correct_movement = (x<=-.75) && (y>=-.5) && (y<=.5); %shwype
-        inc1_movement = (x>=-.75)&&(x<=.75) && (y<=-.1) && (y>=-.75); %tip ahead
+        inc1_movement = (x>=-.75)&&(x<=.75) && (y<=-.05) && (y>=-.85); %tip ahead
         inc2_movement = (x>=.75) && (y>=-.5) && (y<=.5); %sharp cross
     end
     if correct_movement

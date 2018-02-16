@@ -88,6 +88,9 @@ stim.p3StartTime = waitForKeyboard(trigger,device);
 % create structure for storing responses
 P3_order = scenario_sequence;
 P3_response = {};
+X = {}; 
+Y = {}; 
+
 Ao_trials = 0;
 Bo_trials = 0;
 Ao_correct_trials = 0;
@@ -136,6 +139,9 @@ while trial <= N_images
         kx(end+1)=x;
         pause(.05)
     end
+        X(trial) = x; 
+    Y(trial) = y; 
+
     %set correct movements according to if in in A, B, A',B'
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'
@@ -229,7 +235,7 @@ Av_ratio = Av_correct_trials / Av_trials;
 Bv_ratio = Bv_correct_trials / Bv_trials;
 
 save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
-    'P3_order','P3_response','Ao_correct_trials','Av_correct_trials',...
+    'P3_order','P3_response','Ao_correct_trials','Av_correct_trials','X', 'Y',...
     'Bo_correct_trials','Bv_correct_trials','Ao_ratio','Av_ratio','Bo_ratio','Bv_ratio');
 
 %present closing screen

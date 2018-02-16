@@ -41,7 +41,6 @@ for T = 1:nQuads
         end
     end
 end
-P4_order = scenario_sequence;
 
 %make SCENARIO TEXTURES ONLY in the pseudo-randomized order
 N_images = length(scenario_sequence);
@@ -73,6 +72,11 @@ displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS
 stim.p4StartTime = waitForKeyboard(trigger,device);
 
 % BEGIN PHASE 4 TRIALS
+P4_order = scenario_sequence;
+P4_response = {};
+X = {};
+Y = {};
+
 trial = 1;
 Ao_trials = 0;
 Bo_trials = 0;
@@ -111,6 +115,9 @@ while trial <= N_images
         kx(end+1)=x;
         pause(.05)
     end
+    X(trial) = x;
+    Y(trial) = y;
+    
     %set correct movements according to if in in A, B, A',B'
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'
@@ -193,7 +200,7 @@ Av_ratio = Av_correct_trials / Av_trials;
 Bv_ratio = Bv_correct_trials / Bv_trials;
 
 save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
-    'P4_order','P4_response','Ao_correct_trials','Av_correct_trials',...
+    'P4_order','P4_response','Ao_correct_trials','Av_correct_trials', 'X', 'Y',...
     'Bo_correct_trials','Bv_correct_trials','Ao_ratio','Av_ratio','Bo_ratio','Bv_ratio');
 
 end

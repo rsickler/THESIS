@@ -91,6 +91,8 @@ runStart = GetSecs;
 % create structure for storing responses
 P1_order = {};
 P1_response = {};
+X = {}; 
+Y = {}; 
 %initiate variables
 trial = 1;
 Atrials =0;
@@ -135,6 +137,8 @@ while (trial <= max_trials)
         kx(end+1)=x;
         pause(.05)
     end
+    X(trial) = x; 
+    Y(trial) = y; 
     %set correct movements according to if in in A or B
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'
@@ -209,7 +213,7 @@ if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 %fix trial count 
 trial = trial-1;
 %save important variables
-save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim', 'timing','trial','P1_order',...
+save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim', 'timing','trial','P1_order','X', 'Y',...
     'P1_response','Atrials','Btrials','Acorrect_trials','Bcorrect_trials','Aratio','Bratio');  
 
 %present closing screen

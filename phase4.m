@@ -117,7 +117,6 @@ while trial <= N_images
     end
     X(trial) = x;
     Y(trial) = y;
-    
     %set correct movements according to if in in A, B, A',B'
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'

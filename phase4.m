@@ -74,8 +74,6 @@ stim.p4StartTime = waitForKeyboard(trigger,device);
 % BEGIN PHASE 4 TRIALS
 P4_order = scenario_sequence;
 P4_response = {};
-X = {};
-Y = {};
 
 trial = 1;
 Ao_trials = 0;
@@ -180,8 +178,6 @@ timing.plannedOnsets.lastITI = timing.plannedOnsets.go(end) + config.nTRs.go*con
 timespec = timing.plannedOnsets.lastITI-slack;
 timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLACK,WRAPCHARS,timespec);
 WaitSecs(2);
-displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-WaitSecs(2);
 
 
 %SET UP SUBJECT DATA
@@ -201,5 +197,8 @@ Bv_ratio = Bv_correct_trials / Bv_trials;
 save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
     'P4_order','P4_response','Ao_correct_trials','Av_correct_trials', 'X', 'Y',...
     'Bo_correct_trials','Bv_correct_trials','Ao_ratio','Av_ratio','Bo_ratio','Bv_ratio');
+
+displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+WaitSecs(2);
 
 end

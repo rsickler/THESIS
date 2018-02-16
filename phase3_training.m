@@ -88,8 +88,6 @@ stim.p3StartTime = waitForKeyboard(trigger,device);
 % create structure for storing responses
 P3_order = scenario_sequence;
 P3_response = {};
-X = {}; 
-Y = {}; 
 
 Ao_trials = 0;
 Bo_trials = 0;

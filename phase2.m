@@ -103,8 +103,6 @@ runStart = GetSecs;
 % set structure for reading responses
 P2_order = scenario_sequence;
 P2_response = {};
-X = {}; 
-Y = {}; 
 
 %initiate variables
 trial = 1;

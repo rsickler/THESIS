@@ -91,8 +91,6 @@ runStart = GetSecs;
 % create structure for storing responses
 P1_order = {};
 P1_response = {};
-X = {}; 
-Y = {}; 
 %initiate variables
 trial = 1;
 Atrials =0;

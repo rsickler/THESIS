@@ -1,10 +1,12 @@
 %%% This code is for building the classifier that is based off 
 %%% DIRECTED real training on the scenarios, with even ratio of original:variant. 
+% trial: 2s --> 4s --> 4s --> 2s -------> [2s --> 4s --> 4s -->4s] = 26 seconds 
+% 1 round = 2 trials for all 8 images = 16 trials = 6.9 minutes
+
+function classifier_training(SUBJECT,SUBJ_NAME,SESSION,ROUND)
 
 % STARTING EXPERIMENT
 SETUP;
-image_total = N_og_images + N_v_images;
-trial_max = image_total * 3;
 
 % PSEUDO-RANDOMIZE
 %pseudorandomize all originals and variants
@@ -196,3 +198,6 @@ timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLA
 WaitSecs(2);
 displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
+
+
+end

@@ -3,7 +3,7 @@
 % 6.4 + 7.4 + 9.3 + 9.3 + 10 = = 42.4 minutes
 
 % % INTRO
-SUBJECT = 9;
+SUBJECT = 10;
 SUBJ_NAME = num2str(SUBJECT);
 TASK = 1;
 

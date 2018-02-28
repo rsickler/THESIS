@@ -1,12 +1,12 @@
 %%% This code is for building the classifier that is based off 
 %%% DIRECTED real training on the scenarios, with even ratio of original:variant. 
 % trial: 2s --> 4s --> 4s --> 2s -------> [2s --> 4s --> 4s -->4s] = 26 seconds 
-% 1 round = 2 trials for all 12 images = 24 trials = 10.4 minutes
+% 1 round = 2 trials for all 8 images = 16 trials = 6.9 minutes
 
 function classifier_training(SUBJECT,SUBJ_NAME,SESSION,ROUND)
 
 % STARTING EXPERIMENT
-class_SETUP;
+SETUP;
 
 % PSEUDO-RANDOMIZE
 BLOCK = {'BL', 'BM', 'BR','GL', 'GM', 'GR','OL', 'OM', 'OR','WL', 'WM', 'WR'};
@@ -25,11 +25,11 @@ for i = 1:length(scenario_sequence)
 end
 
 % make nonresponse texture
-classFolder = fullfile(workingDir, 'stimuli/CLASSIFIER');
-incorrect_matrix = double(imread(fullfile(classFolder,'class_incorrect.jpeg')));
+stimuliFolder = fullfile(workingDir, 'stimuli/CLASSIFIER');
+incorrect_matrix = double(imread(fullfile(stimuliFolder,'class_incorrect.jpeg')));
 incorrect_texture = Screen('MakeTexture', mainWindow, incorrect_matrix);
 
-% **KEY PRESS FOR ODD EVEN TASK? OR USE JOYSTICK? 
+% **KEY PRESS FOR ODD EVEN TASK? 
 
 
 
@@ -38,9 +38,8 @@ left_dir = ['LEFTMOST PERSON'];
 right_dir = ['RIGHTMOST PERSON'];
 middle_dir = ['MIDDLE PERSON'];
 
+
 %BEGIN PRESENTATION!
-% create structure for storing joystick responses
-train_responses = {};
 % give instructions, wait to begin
 instruct = ['Would you like to start?' ...
     '\n\n-- press "enter" to begin --'];
@@ -96,7 +95,7 @@ while trial <= N_images
     if this_pic(2) == 'L' %if left 
         correct_movement = (x<=-.75) && (y<=0.1); %hit left
     elseif this_pic(2) == 'M' %if middle
-        correct_movement = (y<=0.1) && (x>=-.75)&&(x<=.75); %hit straight
+        correct_movement = (y<=.1) && (x>=-.75)&&(x<=.75); %hit straight
     else %if right
         correct_movement = (x>=.75) && (y<=0.1); %hit right
     end
@@ -106,16 +105,11 @@ while trial <= N_images
         Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
     else
         train_responses{trial} = 'incorrect';
-        DrawFormattedText(mainWindow,'IMPROPER RESPONSE- MAKE SURE TO FOLLOW THE GIVEN DIRECTIONS!','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
-        Screen('DrawTexture', mainWindow,incorrect_texture,[0 0 INC_PICDIMS],[INC_topLeft INC_topLeft+INC_PICDIMS.*INC_RESCALE_FACTOR]);
+        DrawFormattedText(mainWindow,'IMPROPER RESPONSE- MAKE SURE TO FOLLOW DIRECTIONS!','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+        Screen('DrawTexture', mainWindow,incorrect_texture,[0 0 NR_PICDIMS],[NR_topLeft NR_topLeft+NR_PICDIMS.*NR_RESCALE_FACTOR]);
+        train_responses{trial} = 'no response';
     end
     timing.actualOnsets.feedback(trial) = Screen('Flip',mainWindow,timespec);
-    % DO MATH- 1 round of 3 problems
-    num_rounds = 5;
-    num_qs = 3;
-    [digitAcc(trial), digitRT(trial), actualOnsets(trial)] ...
-        = odd_even(digitsEK,num_qs,digits_promptDur,digits_isi,mainWindow, ...
-        keyCell([1 2]),COLORS,device,SUBJ_NAME,[SESSION trial],slack,INSTANT, keys);
     %update trial
     trial= trial+1;
 end
@@ -126,5 +120,6 @@ timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLA
 WaitSecs(2);
 displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 WaitSecs(2);
+
 
 end

@@ -221,8 +221,7 @@ while trial <= N_images
         'cond', 1, ...
         'cresp_map', cresp_map,...
         'valid_map', subj_map); 
-    
-        %update trial
+    %update trial
     trial= trial+1;
 end
 % throw up a final ITI

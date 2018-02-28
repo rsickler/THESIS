@@ -66,7 +66,7 @@ config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %
 runStart = GetSecs;
 
 % give cue, wait to begin
-instruct = ['Would you like to begin Phase 4?' ...
+instruct = ['In this phase, you will no longer be given feedback on your decisions, but should continue to try and choose the correct response. Would you like to begin Phase 4?' ...
     '\n\n-- press "space" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p4StartTime = waitForKeyboard(trigger,device);

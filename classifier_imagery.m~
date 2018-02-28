@@ -70,11 +70,13 @@ left_dir = ['LEFTMOST PERSON'];
 right_dir = ['RIGHTMOST PERSON'];
 middle_dir = ['MIDDLE PERSON'];
     
+
+
 %PRESENT DIRECTED IMAGERY SCENARIOS
 instruct = ['Would you like to start?' ...
     '\n\n-- press "enter" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-stim.StartTime = waitForKeyboard(trigger,device);
+stim.p3StartTime = waitForKeyboard(trigger,device);
 runStart = GetSecs;
 trial = 1;
 while trial <= trial_count

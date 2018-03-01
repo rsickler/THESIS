@@ -1,7 +1,7 @@
-function INTRO_BEHAV(SUBJECT,SESSION)
+function INTRO_CLASS_TRAIN(SUBJECT,SESSION)
 
 %SETUP 
-SETUP; 
+class_SETUP; 
 
 %loading intro photos
 otherFolder = fullfile(workingDir, 'stimuli/other');

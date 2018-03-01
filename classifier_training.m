@@ -31,7 +31,7 @@ for i = 1:length(scenario_sequence)
     feedback_texture(i) = Screen('MakeTexture', mainWindow, feedback_matrix);
 end
 
-% make nonresponse texture
+% make incorrect response texture
 classFolder = fullfile(workingDir, 'stimuli/CLASSIFIER');
 incorrect_matrix = double(imread(fullfile(classFolder,'class_incorrect.jpeg')));
 incorrect_texture = Screen('MakeTexture', mainWindow, incorrect_matrix);

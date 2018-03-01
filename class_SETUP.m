@@ -130,15 +130,17 @@ stim.isiDuration = 2*SPEED;
 stim.scenarioDuration = 4*SPEED;
 stim.goDuration = 4*SPEED;
 stim.feedbackDuration = 2*SPEED;
-stim.mathDuration = 14*SPEED; 
+stim.mathISIDuration = 2*SPEED; 
+stim.mathDuration = 12*SPEED; 
 
 config.TR = stim.TRlength;
 config.nTRs.ISI = stim.isiDuration/stim.TRlength;
 config.nTRs.scenario = stim.scenarioDuration/stim.TRlength;
 config.nTRs.go = stim.goDuration/stim.TRlength;
 config.nTRs.feedback = stim.feedbackDuration/stim.TRlength;
+config.nTRs.mathISI = stim.mathISIDuration/stim.TRlength;
 config.nTRs.math = stim.mathDuration/stim.TRlength;
 
 config.nTrials = 24;
-config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go + config.nTRs.feedback + config.nTRs.math;
+config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go + config.nTRs.feedback + config.nTRs.mathISI + config.nTRs.math;
 config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI

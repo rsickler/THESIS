@@ -52,7 +52,6 @@ end
 N_images = length(scenario_sequence);
 %make stim map
 stim_map = makeMap(scenario_sequence);
-cond_map = makeMap({'even', 'odd'});
 
 %make textures in the pseudo-randomized order
 for i = 1:N_images
@@ -173,7 +172,8 @@ while trial <= N_images
     timing.plannedOnsets.imagine(trial) = timing.plannedOnsets.scenario(trial) + config.nTRs.scenario*config.TR;
     timing.plannedOnsets.go(trial) = timing.plannedOnsets.imagine(trial) + config.nTRs.imagine*config.TR;
     timing.plannedOnsets.vividness(trial) = timing.plannedOnsets.go(trial) + config.nTRs.go*config.TR;
-    timing.plannedOnsets.beep(trial) = timing.plannedOnsets.vividness(trial) - beep_time;
+    timing.plannedOnsets.startbeep(trial) = timing.plannedOnsets.imagine(trial) - beep_time;
+    timing.plannedOnsets.endbeep(trial) = timing.plannedOnsets.vividness(trial) - beep_time;
     % throw up the images
     % pre ITI
     timespec = timing.plannedOnsets.preITI(trial)-slack;

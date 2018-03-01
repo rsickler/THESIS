@@ -68,10 +68,8 @@ digitsEK = startSession(digitsEK);
 num_rounds = 5; 
 num_qs = 3;
 
-timing.plannedOnsets.ITI(trial) = runStart;
-timing.plannedOnsets.math(trial) = runStart;
-
 for round = 1:num_rounds
+    start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,INSTANT);
     WaitSecs(2);
     [digitAcc(round), digitRT(round), actualOnsets(round)] ...
     = odd_even(digitsEK,num_qs,digits_promptDur,digits_isi,mainWindow, ...
@@ -87,7 +85,7 @@ WaitSecs(2);
 endSession(digitsEK);
 
 % save final variables
-save([ppt_dir matlabSaveFile], 'stim', 'timing', 'digitAcc','digitRT','actualOnsets');  
+save([ppt_dir matlabSaveFile], 'digitAcc','digitRT','actualOnsets');  
 
 %present closing screen
 instruct = ['That completes the third phase! You may now take a brief break before phase four. Press enter when you are ready to continue.' ...

@@ -7,6 +7,13 @@ function classifier_training(SUBJECT,SUBJ_NAME,SESSION,ROUND)
 
 % STARTING EXPERIMENT
 class_SETUP;
+% matlab save file
+matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+data_dir = fullfile(workingDir, 'BehavioralData');
+if ~exist(data_dir,'dir'), mkdir(data_dir); end
+ppt_dir = [data_dir filesep SUBJ_NAME filesep];
+if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
+
 
 % PSEUDO-RANDOMIZE
 BLOCK = {'BL', 'BM', 'BR','GL', 'GM', 'GR','OL', 'OM', 'OR','WL', 'WM', 'WR'};
@@ -43,12 +50,12 @@ middle_dir = ['MIDDLE PERSON'];
 train_responses = {};
 % give instructions, wait to begin
 instruct = ['Would you like to start?' ...
-    '\n\n-- press "enter" to begin --'];
+    '\n\n-- press "space" to begin --'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 stim.p3StartTime = waitForKeyboard(trigger,device);
 runStart = GetSecs;
 trial = 1;
-while trial <= N_images
+while trial <= length(scenario_sequence)
     % calculate all future onsets
     timing.plannedOnsets.preITI(trial) = runStart;
     if trial > 1
@@ -57,11 +64,12 @@ while trial <= N_images
     timing.plannedOnsets.scenario(trial) = timing.plannedOnsets.preITI(trial) + config.nTRs.ISI*config.TR;
     timing.plannedOnsets.go(trial) = timing.plannedOnsets.scenario(trial) + config.nTRs.scenario*config.TR;
     timing.plannedOnsets.feedback(trial) = timing.plannedOnsets.go(trial) + config.nTRs.go*config.TR;
-    timing.plannedOnsets.math(trial) = timing.plannedOnsets.feedback(trial) + config.nTRs.feedback*config.TR;
+    timing.plannedOnsets.mathISI(trial) = timing.plannedOnsets.feedback(trial) + config.nTRs.feedback*config.TR;
+    timing.plannedOnsets.math(trial) = timing.plannedOnsets.mathISI(trial) + config.nTRs.mathISI*config.TR;
     % throw up the images
     % pre ITI
     timespec = timing.plannedOnsets.preITI(trial)-slack;
-    timing.actualOnsets.preITI(trial) = start_time_func(mainWindow,'+','center',COLORS.BLACK,WRAPCHARS,timespec);
+    timing.actualOnsets.preITI(trial) = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
     % scenario + direction
     this_pic = scenario_sequence{trial};
     if this_pic(2) == 'L' %left 
@@ -110,6 +118,9 @@ while trial <= N_images
         Screen('DrawTexture', mainWindow,incorrect_texture,[0 0 INC_PICDIMS],[INC_topLeft INC_topLeft+INC_PICDIMS.*INC_RESCALE_FACTOR]);
     end
     timing.actualOnsets.feedback(trial) = Screen('Flip',mainWindow,timespec);
+    % pre-math ISI
+    timespec = timing.plannedOnsets.mathISI(trial)-slack;
+    timing.actualOnsets.mathITI(trial) = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
     % DO MATH- 1 round of 3 problems
     num_rounds = 5;
     num_qs = 3;
@@ -122,9 +133,30 @@ end
 % throw up a final ITI
 timing.plannedOnsets.lastITI = timing.plannedOnsets.feedback(end) + config.nTRs.feedback*config.TR;
 timespec = timing.plannedOnsets.lastITI-slack;
-timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLACK,WRAPCHARS,timespec);
+timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
 WaitSecs(2);
-displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-WaitSecs(2);
+
+% FINALIZE DATA / CLOSE UP SHOP
+% close the structure????
+
+
+%check accuracy 
+corrects = 0; 
+for i = 1:length(scenario_sequence)
+    if train_responses{trial} == 'correct'
+        corrects = corrects+1; 
+    end
+end
+class_ratio = corrects / length(scenario_sequence); 
+
+%save important variables
+save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim', 'timing','scenario_sequence','X', 'Y',...
+    'train_responses','digitAcc','digitRT','actualOnsets','class','Btrials','class_ratio');  
+
+instruct = ['That completes the current round! You may now take a brief break before the next round. Press enter when you are ready to continue.' ...
+    '\n\n\n\n -- press "space" to continue --'];
+DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('Flip',mainWindow, INSTANT);
+end_press = waitForKeyboard(trigger,device);
 
 end

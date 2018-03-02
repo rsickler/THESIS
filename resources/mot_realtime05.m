@@ -23,7 +23,6 @@ function mot_realtime05(SUBJECT,SESSION,SET_SPEED,scanNum,scanNow)
 %scanNow: if you're using the scanner right now (0 if not, 1 if yes) aka
 %looking for triggers
 
-
 % note: TR values begin from t=1 (rather than t=0)
 ListenChar(2); %suppress keyboard input to window
 KbName('UnifyKeyNames');

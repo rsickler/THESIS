@@ -1,22 +1,7 @@
-function INTRO_CLASS_IMAGERY(SUBJECT,SESSION)
+function INTRO_CLASS_IMAGERY(SUBJECT, SUBJ_NAME, SESSION, ROUND)
 
 %SETUP 
 class_SETUP; 
-
-%loading intro photos
-otherFolder = fullfile(workingDir, 'stimuli/other');
-oneBlocker_matrix = double(imread(fullfile(otherFolder,'oneBlocker.jpeg')));
-oneBlocker_texture = Screen('MakeTexture', mainWindow, oneBlocker_matrix);
-twoBlocker_matrix = double(imread(fullfile(otherFolder,'twoBlocker.jpeg')));
-twoBlocker_texture = Screen('MakeTexture', mainWindow, twoBlocker_matrix);
-intro_PICDIMS = [767 767];
-intro_pic_size = windowSize.pixels*.5;
-intro_RESCALE_FACTOR = intro_pic_size./intro_PICDIMS;
-intro_textRow = windowSize.pixels(2) *(.05);
-intro_picRow = windowSize.pixels(2) *(.65);
-cont_textRow = windowSize.pixels(2) *(.93); 
-intro_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (intro_PICDIMS(HORIZONTAL)*intro_RESCALE_FACTOR(HORIZONTAL))/2;
-intro_topLeft(VERTICAL) = intro_picRow - (intro_PICDIMS(VERTICAL)*intro_RESCALE_FACTOR(VERTICAL))/2;
 
 % present experiment summary
 start_time = GetSecs;
@@ -42,7 +27,7 @@ instruct = ['When faced with a single blocker, your three options are:'...
     '\n\n The joystick movements associated with each of these three options are shown below. '...
     'Notice the movements are flipped depending on which side of the court you are starting from!'];
 DrawFormattedText(mainWindow,instruct,intro_textRow,intro_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.2);
-Screen('DrawTexture', mainWindow,oneBlocker_texture,[0 0 intro_PICDIMS],[intro_topLeft intro_topLeft+intro_PICDIMS.*intro_RESCALE_FACTOR]);
+Screen('DrawTexture', mainWindow,class_intro_texture,[0 0 intro_PICDIMS],[intro_topLeft intro_topLeft+intro_PICDIMS.*intro_RESCALE_FACTOR]);
 cont = ['-- press "enter" to continue --'];
 DrawFormattedText(mainWindow,cont,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);

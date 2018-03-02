@@ -74,7 +74,8 @@ stim.p4StartTime = waitForKeyboard(trigger,device);
 % BEGIN PHASE 4 TRIALS
 P4_order = scenario_sequence;
 P4_response = {};
-
+x_path = {}; 
+y_path = {}; 
 trial = 1;
 Ao_trials = 0;
 Bo_trials = 0;
@@ -115,6 +116,8 @@ while trial <= N_images
     end
     X(trial) = x;
     Y(trial) = y;
+    x_path{trial} = kx; 
+    y_path{trial} = ky;
     %set correct movements according to if in in A, B, A',B'
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'
@@ -195,7 +198,7 @@ Av_ratio = Av_correct_trials / Av_trials;
 Bv_ratio = Bv_correct_trials / Bv_trials;
 
 save([ppt_dir matlabSaveFile], 'SUBJ_NAME', 'stim', 'timing', 'total_trials',...
-    'P4_order','P4_response','Ao_correct_trials','Av_correct_trials', 'X', 'Y',...
+    'P4_order','P4_response','Ao_correct_trials','Av_correct_trials', 'X', 'Y','x_path','y_path',...
     'Bo_correct_trials','Bv_correct_trials','Ao_ratio','Av_ratio','Bo_ratio','Bv_ratio');
 
 displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);

@@ -3,6 +3,8 @@ debugging = true;
 joystick = false;
 running = 1;
 SPEED = 1;
+CURRENTLY_ONLINE = false; 
+fmri = false; 
 
 % setting up your subject's folder
 if running == 17
@@ -12,14 +14,14 @@ elseif running == 18
 else workingDir = '/Users/treysickler/Documents/MATLAB/THESIS';
 end
 
-DEBUG_MONITOR_SIZE = [2560 1600]/4;
 
 % SETTING WINDOW/DISPLAY
+DEBUG_MONITOR_SIZE = [2560 1600]/4;
 DEFAULT_MONITOR_SIZE = [1024 768];
 AssertOpenGL;
 MAINFONT = 'Arial';
 subjectDir = [];
-fmri = 0;
+
 % seed
 seed = sum(100*clock);
 RandStream.setGlobalStream(RandStream('mt19937ar','Seed',seed));
@@ -144,3 +146,14 @@ config.nTRs.math = stim.mathDuration/stim.TRlength;
 config.nTrials = 24;
 config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go + config.nTRs.feedback + config.nTRs.mathISI + config.nTRs.math;
 config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
+
+
+% FMRI JUNK
+% timing constants
+STABILIZATIONTIME = 2 * stim.TRlength;
+STILLDURATION = 6 * SPEED;
+CONGRATSDURATION = 3*SPEED;
+INSTANT = 0.001;
+
+STILLREMINDER = ['The scan is now starting.\n\nMoving your head even a little blurs the image, so '...
+    'please try to keep your head totally still until the scanning noise stops.\n\n Do it for science!'];

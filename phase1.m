@@ -135,8 +135,8 @@ while (trial <= max_trials)
         kx(end+1)=x;
         pause(.05)
     end
-    X(trial) = x; 
-    Y(trial) = y; 
+    X(trial) = kx; 
+    Y(trial) = kx; 
     %set correct movements according to if in in A or B
     this_pic = scenario_sequence{trial};
     if this_pic(1) == 'A'

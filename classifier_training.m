@@ -2,13 +2,14 @@
 %%% DIRECTED real training on the scenarios, with even ratio of original:variant.
 % trial: 2s --> 4s --> 4s --> 2s -------> [2s --> 4s --> 4s -->4s] = 26 seconds
 % 1 round = 2 trials for all 12 images = 24 trials = 10.4 minutes
+% 624 seconds + 20 second delay + 10 second shut down = 654 sec = 327 TR
 
 function classifier_training(SUBJECT,SUBJ_NAME,SESSION,ROUND)
 
 % STARTING EXPERIMENT
 class_SETUP;
 % matlab save file
-matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' num2str(ROUND) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
 data_dir = fullfile(workingDir, 'BehavioralData');
 if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
@@ -37,15 +38,24 @@ left_dir = ['LEFTMOST PERSON'];
 right_dir = ['RIGHTMOST PERSON'];
 middle_dir = ['MIDDLE PERSON'];
 
-%% CREATE STRUCTURES
-%set button presses for feedback
-ONE = '1';
-TWO = '2';
-THREE = '3';
-FOUR = '4';
-FIVE = '5';
-KEYS = [ONE TWO THREE FOUR FIVE];
-keyCell = {ONE, TWO THREE FOUR FIVE};
+%% start screen
+instruct = ['Would you like to start?' ...
+    '\n\n-- press "space" to begin --'];
+displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+stim.StartTime = waitForKeyboard(trigger,device);
+instruct = ['Loading Scanner...'];
+displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+
+%% set up math
+num_qs = 3;
+digits_promptDur = 4*SPEED; % length digits on screen
+digits_isi = 0*SPEED; 
+
+%% SET UP FMRI STUFF
+%set fmri pulse trigger
+T = '=';
+KEYS = [T];
+keyCell = {T};
 allkeys = KEYS;
 % define key names
 for i = 1:length(allkeys)
@@ -53,35 +63,7 @@ for i = 1:length(allkeys)
     keys.map(i,:) = zeros(1,256);
     keys.map(i,keys.code(i,:)) = 1;
 end
-%make maps
-digits_map = sum(keys.map([1:2],:));
-digits_keys = keyCell;
-digits_scale = makeMap({'even','odd'},[0 1],keyCell([1 2]));
-cond_map = makeMap({'even', 'odd'});
-% this sets up the odd/even task structure
-digits_cresp = keyCell(1:2);
-digits_triggerNext = false;
-digits_promptDur = 4*SPEED; % length digits on screen
-digits_isi = 0*SPEED; % length ISI
-digits_listenDur = 0;
-% initialize vividness structure
-runStart = GetSecs;
-% initialize odd/even structure
-digitsEK = initEasyKeys(['phase3_distractor' '_SUB'], SUBJ_NAME,ppt_dir, ...
-    'default_respmap', digits_scale, ...
-    'condmap', cond_map, ...
-    'trigger_next', digits_triggerNext, ...
-    'prompt_dur', digits_promptDur, ...
-    'listen_dur', digits_listenDur, ...
-    'exp_onset', runStart, ...
-    'console', false, ...
-    'device', -1);
-digitsEK = startSession(digitsEK);
-
-%% SET UP FMRI STUFF
-if fmri
-    TRIGGER_keycode = keys.code(5,:);
-end
+TRIGGER_keycode = keys.code;
 
 % fixation period for 20 s
 if CURRENTLY_ONLINE && ROUND <=1
@@ -116,22 +98,17 @@ config.nTRs.perBlock = config.wait/config.TR + (config.nTRs.perTrial)*config.nTr
 
 % wait indefinitely until first scan trigger
 if CURRENTLY_ONLINE
-    [timing.trig.wait timing.trig.waitSuccess] = WaitTRPulse(TRIGGER_keycode,DEVICE);
+    [timing.trig.wait, timing.trig.waitSuccess] = WaitTRPulse(TRIGGER_keycode,device);
 end
 
 %% BEGIN PRESENTATION!
-% create structure for storing joystick responses
+% initialize variables
 train_responses = {};
-% give instructions, wait to begin
-instruct = ['Would you like to start?' ...
-    '\n\n-- press "space" to begin --'];
-displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-stim.p3StartTime = waitForKeyboard(trigger,device);
-runStart = GetSecs;
 trial = 1;
+
 while trial <= length(scenario_sequence)
     % calculate all future onsets
-    timing.plannedOnsets.preISI(trial) = runStart;
+    timing.plannedOnsets.preISI(trial) = runStart +config.wait;
     if trial > 1
         timing.plannedOnsets.preISI(trial) = timing.plannedOnsets.preISI(trial-1) + config.nTRs.perTrial*config.TR;
     end
@@ -172,9 +149,8 @@ while trial <= length(scenario_sequence)
     timespec = timing.plannedOnsets.go(trial)-slack;
     timing.actualOnsets.go(trial) = start_time_func(mainWindow,'GO!','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
     fprintf('Flip time error = %.4f\n', timing.actualOnsets.go(trial) - timing.plannedOnsets.go(trial));
-    %feedback
     %record trajectory
-    tEnd=GetSecs+4;
+    tEnd=GetSecs+stim.goDuration;
     while GetSecs<tEnd
         x=axis(joy, 1);
         y=axis(joy, 2);
@@ -187,19 +163,20 @@ while trial <= length(scenario_sequence)
     %make sure did correct movement
     this_pic = scenario_sequence{trial};
     if this_pic(2) == 'L' %if left
-        correct_movement = (x<=-.75) && (y<=0.1); %hit left
+        correct_movement = (x<=-.75) && (y<=-.75); %hit left
     elseif this_pic(2) == 'M' %if middle
-        correct_movement = (y<=0.1) && (x>=-.75)&&(x<=.75); %hit straight
+        correct_movement = (y<=-.75) && (x>=-.75)&&(x<=.75); %hit straight
     else %if right
-        correct_movement = (x>=.75) && (y<=0.1); %hit right
+        correct_movement = (x>=.75) && (y<=-.75); %hit right
     end
-    %draw feedback
+    %feedback
     if CURRENTLY_ONLINE
         [timing.trig.feedback(trial), timing.trig.feedback_Success(trial)] = WaitTRPulse(TRIGGER_keycode,device,timing.plannedOnsets.feedback(trial));
     end
     timespec = timing.plannedOnsets.feedback(trial)-slack;
     if correct_movement
         train_responses{trial} = 'correct';
+        DrawFormattedText(mainWindow,'+1','center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
         Screen('DrawTexture', mainWindow, feedback_texture(trial),[0 0 PICDIMS],[topLeft topLeft+PICDIMS.*RESCALE_FACTOR]);
         Screen('FrameRect', mainWindow, COLORS.GREEN,[topLeft topLeft+PICDIMS.*RESCALE_FACTOR],5);
     else
@@ -220,14 +197,11 @@ while trial <= length(scenario_sequence)
     if CURRENTLY_ONLINE
         [timing.trig.math(trial), timing.trig.math_Success(trial)] = WaitTRPulse(TRIGGER_keycode,device,timing.plannedOnsets.math(trial));
     end
-    num_rounds = 5;
-    num_qs = 3;
     timespec = timing.plannedOnsets.math(trial)-slack;
-    [digitAcc(trial), digitRT(trial), timing.actualOnsets.math(trial)] ...
-        = odd_even(digitsEK,num_qs,digits_promptDur,digits_isi,mainWindow, ...
-        keyCell([1 2]),COLORS,device,SUBJ_NAME,[SESSION trial],slack,INSTANT, keys);
+    [digitAcc(trial), timing.actualOnsets.math(trial)] ...
+        = odd_even_joy(num_qs,digits_promptDur,digits_isi,mainWindow,stim.textRow, ...
+        COLORS,device,slack,timespec);
     fprintf('Flip time error = %.4f\n', timing.actualOnsets.math(trial)-timing.plannedOnsets.math(trial));
-    
     %update trial
     trial= trial+1;
 end
@@ -235,24 +209,22 @@ end
 timing.plannedOnsets.lastISI = timing.plannedOnsets.math(end) + config.nTRs.math*config.TR;
 timespec = timing.plannedOnsets.lastISI-slack;
 timing.actualOnset.finalISI = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
-WaitSecs(2);
+WaitSecs(10); 
 
 %% FINALIZE DATA / CLOSE UP SHOP
-% close the structure
-endSession(digitsEK);
 
 %check accuracy
 corrects = 0;
 for i = 1:length(scenario_sequence)
-    if strcmp(train_responses{trial},'correct')
+    if strcmp(train_responses{i},'correct')
         corrects = corrects+1;
     end
 end
 class_ratio = corrects / length(scenario_sequence);
 
 %save important variables
-save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim', 'timing','scenario_sequence','X', 'Y',...
-    'train_responses','digitAcc','digitRT','actualOnsets','class','Btrials','class_ratio');
+save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim','timing','round_sequence','X','Y',...
+    'train_responses','digitAcc','class_ratio');
 
 %present closing screen
 instruct = ['That completes the current round! You may now take a brief break before the next round. Press enter when you are ready to continue.' ...

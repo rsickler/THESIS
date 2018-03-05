@@ -8,7 +8,7 @@ function classifier_imagery(SUBJECT,SUBJ_NAME,SESSION,ROUND)
 class_SETUP;
 
 % matlab save file
-matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' num2str(ROUND) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
 data_dir = fullfile(workingDir, 'BehavioralData');
 if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
@@ -17,9 +17,9 @@ if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 %% SET UP SCREEN
 % make vividness texture
 otherFolder = fullfile(workingDir, 'stimuli/other');
-vividness_matrix = double(imread(fullfile(otherFolder,'vividness.jpg')));
+vividness_matrix = double(imread(fullfile(otherFolder,'vividness.jpeg')));
 vividness_texture = Screen('MakeTexture', mainWindow, vividness_matrix);
-v_PICDIMS = [750 558];
+v_PICDIMS = [1024 768];
 v_picRow = CENTER(2);
 v_pic_size = windowSize.pixels*.75;
 v_RESCALE_FACTOR = v_pic_size./v_PICDIMS;
@@ -42,18 +42,34 @@ end
 left_dir = ['LEFTMOST PERSON'];
 right_dir = ['RIGHTMOST PERSON'];
 middle_dir = ['MIDDLE PERSON'];
-%format beep
-beep_time = 0.25;
 
-%% CREATE STRUCTURES
-%set button presses for feedback
-ONE = '1';
-TWO = '2';
-THREE = '3';
-FOUR = '4';
-FIVE = '5';
-KEYS = [ONE TWO THREE FOUR FIVE];
-keyCell = {ONE, TWO THREE FOUR FIVE};
+%format beep
+InitializePsychSound(1);
+freq = 44100;
+nrchannels = 1;
+beep_time = 0.25; 
+snddata = MakeBeep(378, duration, freq);
+pahandle = PsychPortAudio('Open', [], [], [], freq, nrchannels);
+PsychPortAudio('FillBuffer', pahandle, snddata);
+
+% set up math
+num_qs = 3;
+digits_promptDur = 4*SPEED; % length digits on screen
+digits_isi = 0*SPEED; 
+
+%% start screen
+instruct = ['Would you like to start?' ...
+    '\n\n-- press "space" to begin --'];
+displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+stim.StartTime = waitForKeyboard(trigger,device);
+instruct = ['Loading Scanner...'];
+displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+
+%% SET UP FMRI STUFF
+%set fmri pulse trigger
+T = '=';
+KEYS = [T];
+keyCell = {T};
 allkeys = KEYS;
 % define key names
 for i = 1:length(allkeys)
@@ -61,60 +77,10 @@ for i = 1:length(allkeys)
     keys.map(i,:) = zeros(1,256);
     keys.map(i,keys.code(i,:)) = 1;
 end
-%make maps
-digits_map = sum(keys.map([1:2],:));
-digits_keys = keyCell;
-digits_scale = makeMap({'even','odd'},[0 1],keyCell([1 2]));
-cond_map = makeMap({'even', 'odd'});
-subj_map = sum(keys.map(1:5,:));
-subj_keys = keyCell;
-subj_scale = makeMap({'no image', 'generic', '1 detail', '2+ details', 'full'}, 1:5, subj_keys);
-subj_cresp_map = sum(keys.map(3:5,:));
-stim_names = strcat(BLOCK,'.jpg');
-stim_map = makeMap(stim_names);
-% this sets up the vividness feedback structure
-subj_cresp = keyCell(3:5);
-subj_triggerNext = false;
-subj_promptDur = 2*SPEED;
-subj_listenDur = 0;
-% this sets up the odd even task structure
-digits_cresp = keyCell(1:2);
-digits_triggerNext = false;
-digits_promptDur = 4*SPEED; % length digits on screen
-digits_isi = 0*SPEED; % length ISI
-digits_listenDur = 0;
-% initialize vividness structure
-runStart = GetSecs;
-subjectiveEK = initEasyKeys(['phase3_imagery' '_SUB'], SUBJ_NAME,ppt_dir, ...
-    'default_respmap', subj_scale, ...
-    'stimmap', stim_map, ...
-    'condmap', cond_map, ...
-    'trigger_next', subj_triggerNext, ...
-    'prompt_dur', subj_promptDur, ...
-    'listen_dur', subj_listenDur, ...
-    'exp_onset', runStart, ...
-    'console', false, ...
-    'device', -1);
-subjectiveEK = startSession(subjectiveEK);
-% initialize odd/even structure
-digitsEK = initEasyKeys(['phase3_distractor' '_SUB'], SUBJ_NAME,ppt_dir, ...
-    'default_respmap', digits_scale, ...
-    'condmap', cond_map, ...
-    'trigger_next', digits_triggerNext, ...
-    'prompt_dur', digits_promptDur, ...
-    'listen_dur', digits_listenDur, ...
-    'exp_onset', runStart, ...
-    'console', false, ...
-    'device', -1);
-digitsEK = startSession(digitsEK);
-
-%% SET UP FMRI STUFF
-if fmri
-    TRIGGER_keycode = keys.code(5,:);
-end
+TRIGGER_keycode = keys.code;
 
 % fixation period for 20 s
-if CURRENTLY_ONLINE && ROUND <=1 
+if CURRENTLY_ONLINE
     [timing.trig.wait, timing.trig.waitSuccess] = WaitTRPulse(TRIGGER_keycode,device);
     runStart = timing.trig.wait;
     displayText(mainWindow,STILLREMINDER,STILLDURATION,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -147,16 +113,13 @@ config.nTRs.perBlock = config.wait/config.TR + (config.nTRs.perTrial)*config.nTr
 
 % wait indefinitely until first scan trigger
 if CURRENTLY_ONLINE
-    [timing.trig.wait timing.trig.waitSuccess] = WaitTRPulse(TRIGGER_keycode,DEVICE);
+    [timing.trig.wait, timing.trig.waitSuccess] = WaitTRPulse(TRIGGER_keycode,device);
 end
 
 %% PRESENT DIRECTED IMAGERY SCENARIOS
-instruct = ['Would you like to start?' ...
-    '\n\n-- press "space" to begin --'];
-displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-stim.StartTime = waitForKeyboard(trigger,device);
-runStart = GetSecs;
 trial = 1;
+vividness = {}; 
+
 while trial <= length(scenario_sequence)
     % calculate all future onsets
     timing.plannedOnsets.preISI(trial) = runStart +config.wait;
@@ -198,8 +161,7 @@ while trial <= length(scenario_sequence)
     % go
     %beep begin
     timespec = timing.plannedOnsets.startbeep(trial);
-    duration = beep_time;
-    basic_tone(timespec,duration);
+    basic_tone(timespec,beep_time, pahandle);
     %flip screen
     if CURRENTLY_ONLINE
         [timing.trig.go(trial), timing.trig.go_Success(trial)] = WaitTRPulse(TRIGGER_keycode,device,timing.plannedOnsets.go(trial));
@@ -209,8 +171,7 @@ while trial <= length(scenario_sequence)
     fprintf('Flip time error = %.4f\n', timing.actualOnsets.go(trial) - timing.plannedOnsets.go(trial));
     %beep end
     timespec = timing.plannedOnsets.endbeep(trial);
-    duration = beep_time;
-    basic_tone(timespec,duration);
+    basic_tone(timespec,beep_time, pahandle);
     %feedback
     if CURRENTLY_ONLINE
         [timing.trig.feedback(trial), timing.trig.feedback_Success(trial)] = WaitTRPulse(TRIGGER_keycode,device,timing.plannedOnsets.feedback(trial));
@@ -220,13 +181,23 @@ while trial <= length(scenario_sequence)
     timing.actualOnsets.feedback(trial) = Screen('Flip',mainWindow,timespec);
     fprintf('Flip time error = %.4f\n', timing.actualOnsets.feedback(trial) - timing.plannedOnsets.feedback(trial));
     %record vividness input
-    subjectiveEK = easyKeysTREY(subjectiveEK, ...
-        'onset', timing.actualOnsets.feedback(trial), ...
-        'stim', scenario_sequence(trial), ...
-        'cresp', subj_cresp, ...
-        'cond', 1, ...
-        'cresp_map', subj_cresp_map,...
-        'valid_map', subj_map);
+    tEnd=GetSecs+stim.feedbackDuration;
+    while GetSecs<tEnd
+        x=axis(joy, 1);
+        y=axis(joy, 2);
+    end
+    %record imagery rating
+    if (x>=-.75)&&(x<=.75) && (y>=.75); %DOWN FOR NOT VIVID AT ALL
+        vividness{trial} = 'NOT VIVID AT ALL';
+    elseif (x<=-.75) && (y>=-.75)&&(y<=.75); %LEFT FOR SOMEWHAT VIVID
+        vividness{trial} = 'SOMEWHAT VIVID';
+    elseif (x>=-.75)&&(x<=.75) && (y>=.75) % UP FOR FAIRLY VIVID
+        vividness{trial} = 'FAIRLY VIVID';
+    elseif (x>=.75) && (y>=-.75)&&(y<=.75) % RIGHT FOR VERY VIVID
+        vividness{trial} = 'VERY VIVID';
+    else
+        vividness{trial} = 'UNCLEAR'; % RIGHT FOR VERY VIVID
+    end    
     % pre-math ISI
     if CURRENTLY_ONLINE
         [timing.trig.mathISI(trial), timing.trig.mathISI_Success(trial)] = WaitTRPulse(TRIGGER_keycode,device,timing.plannedOnsets.mathISI(trial));
@@ -238,12 +209,10 @@ while trial <= length(scenario_sequence)
     if CURRENTLY_ONLINE
         [timing.trig.math(trial), timing.trig.math_Success(trial)] = WaitTRPulse(TRIGGER_keycode,device,timing.plannedOnsets.math(trial));
     end
-    num_rounds = 5;
-    num_qs = 3;
     timespec = timing.plannedOnsets.math(trial)-slack;
-    [digitAcc(trial), digitRT(trial), timing.actualOnsets.math(trial)] ...
-        = odd_even(digitsEK,num_qs,digits_promptDur,digits_isi,mainWindow, ...
-        keyCell([1 2]),COLORS,device,SUBJ_NAME,[SESSION trial],slack,timespec, keys);
+    [digitAcc(trial), timing.actualOnsets.math(trial)] ...
+        = odd_even_joy(num_qs,digits_promptDur,digits_isi,mainWindow,stim.textRow, ...
+        COLORS,device,slack,timespec);
     fprintf('Flip time error = %.4f\n', timing.actualOnsets.math(trial)-timing.plannedOnsets.math(trial));
     %update trial
     trial= trial+1;
@@ -252,16 +221,14 @@ end
 timing.plannedOnsets.lastISI = timing.plannedOnsets.math(end) + config.nTRs.math*config.TR;
 timespec = timing.plannedOnsets.lastISI-slack;
 timing.actualOnset.finalISI = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
-WaitSecs(2);
+WaitSecs(10); 
 
 %%
 % FINALIZE DATA / CLOSE UP SHOP
-% close the structure
-endSession(digitsEK);
-endSession(subjectiveEK);
+PsychPortAudio('Close', pahandle);
 
 % save final variables
-save([ppt_dir matlabSaveFile], 'stim', 'timing', 'scenario_sequence','digitAcc','digitRT','actualOnsets');
+save([ppt_dir matlabSaveFile], 'stim', 'timing', 'scenario_sequence','digitAcc');
 
 %present closing screen
 if ROUND == 2

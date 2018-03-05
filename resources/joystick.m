@@ -24,38 +24,3 @@ while GetSecs<tEnd
     % delay between plots
     pause(.05)
 end
-
-%testing full straight ahead (A=hitline, C = set outside, D = block line)
-if (y(end)<=.1) && (x(end)>=-.75)&& (x(end)<=.75) 
-    fprintf('\n\n DID go full straight')
-else 
-    fprintf('\n\n didnt go full straight ahead')
-end
-
-%testing full diagnal away (A = hit cross, B = hit cross, D = block cross)
-if (x>=.75) && (y<=0.1) 
-    fprintf('\n\n DID go full diagnal away')
-else 
-    fprintf('\n\n didnt go full diagnal away')
-end
-
-%testing sharply to side away from body ( A = sharp cross, B = shwype out)
-if (x>=.75) && (y>=-.1) && (y<=.75)
-    fprintf('\n\n DID go sharp to side ')
-else 
-    fprintf('\n\n didnt go sharp to side')
-end
-
-%testing small move straight (A/B = tip ahead, C = set middle)
-if (x(end)>=-.75)&& (x(end)<=.75) && (y(end)>=.1) && (y(end)<=.6)
-    fprintf('\n\n DID make small move straight ahead')
-else 
-    fprintf('\n\n didnt make small move straight ahead')
-end
-
-%testing move back (C = set Dball, D = pull block back) 
-if (x(end)>=-.75)&& (x(end)<=.75) && (y(end)>=.75)
-    fprintf('\n\n DID move back ')
-else 
-    fprintf('\n\n didnt move back')
-end

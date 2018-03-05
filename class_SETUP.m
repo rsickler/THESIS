@@ -1,10 +1,9 @@
 % debug conditions
 debugging = true;
-joystick = false;
+joystick = true;
 running = 1;
 SPEED = 1;
 CURRENTLY_ONLINE = false; 
-fmri = false; 
 
 % setting up your subject's folder
 if running == 17
@@ -88,6 +87,15 @@ INC_PICDIMS = [400 400];
 INC_RESCALE_FACTOR = pic_size./INC_PICDIMS;
 INC_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (INC_PICDIMS(HORIZONTAL)*INC_RESCALE_FACTOR(HORIZONTAL))/2;
 INC_topLeft(VERTICAL) = stim.picRow - (INC_PICDIMS(VERTICAL)*INC_RESCALE_FACTOR(VERTICAL))/2;
+% intro photos
+intro_PICDIMS = [1024 768];
+intro_pic_size = windowSize.pixels*.5;
+intro_RESCALE_FACTOR = intro_pic_size./intro_PICDIMS;
+intro_textRow = windowSize.pixels(2) *(.05);
+intro_picRow = windowSize.pixels(2) *(.65);
+cont_textRow = windowSize.pixels(2) *(.93); 
+intro_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (intro_PICDIMS(HORIZONTAL)*intro_RESCALE_FACTOR(HORIZONTAL))/2;
+intro_topLeft(VERTICAL) = intro_picRow - (intro_PICDIMS(VERTICAL)*intro_RESCALE_FACTOR(VERTICAL))/2;
 
 % LOAD IMAGES
 % create original directories and lists

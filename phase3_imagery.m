@@ -20,6 +20,15 @@ subj_triggerNext = false;
 subj_promptDur = 2; 
 subj_listenDur = 0;
 
+%set up beep
+InitializePsychSound(1);
+freq = 44100;
+nrchannels = 1;
+beep_time = 0.25; 
+snddata = MakeBeep(378, duration, freq);
+pahandle = PsychPortAudio('Open', [], [], [], freq, nrchannels);
+PsychPortAudio('FillBuffer', pahandle, snddata);
+
 % PSEUDORANDOMIZE SCENARIOS
 %pseudorandomize all originals and variants in blocks of 4, using all 16
 % images once each
@@ -135,7 +144,6 @@ stim.scenarioDuration = 3*SPEED;
 stim.imagineDuration = 3*SPEED;
 stim.goDuration = 4*SPEED;
 stim.vividnessDuration = 2*SPEED;
-beep_time = 0.25; 
 
 config.nTRs.ISI = stim.isiDuration/stim.TRlength;
 config.nTRs.scenario = stim.scenarioDuration/stim.TRlength;
@@ -182,10 +190,13 @@ while trial <= N_images
     timespec = timing.plannedOnsets.scenario(trial)-slack;
     Screen('DrawTexture', mainWindow, scenario_texture(trial), [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
     timing.actualOnsets.scenario(trial) = Screen('Flip',mainWindow,timespec);
-    % imagine
+    % close eyes beep
+    timespec = timing.plannedOnsets.startbeep(trial);
+    basic_tone(timespec,beep_time, pahandle);
+    % imagine scenario
     timespec = timing.plannedOnsets.imagine(trial)-slack;
     timing.actualOnsets.go(trial) = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
-        % imagine audio
+    % imagine audio
     
     
     % go
@@ -206,10 +217,9 @@ while trial <= N_images
             correct_movement = 4; %tip ahead
         end
     end
-    % beep 
-    timespec = timing.plannedOnsets.beep(trial);
-    duration = beep_time;
-    basic_tone(timespec,duration);
+    % open eyes beep 
+    timespec = timing.plannedOnsets.endbeep(trial);
+    basic_tone(timespec,beep_time,pahandle);
     % vividness
     timespec = timing.plannedOnsets.vividness(trial)-slack;
     Screen('DrawTexture', mainWindow, vividness_texture,[0 0 v_PICDIMS],[v_topLeft v_topLeft+v_PICDIMS.*v_RESCALE_FACTOR]);

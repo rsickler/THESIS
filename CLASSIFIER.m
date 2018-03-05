@@ -1,7 +1,7 @@
 %%% Master code for FMRI classifier training session. 
 
-% intro + 2 phase 1 rounds + 2 phase 2 rounds
-%  ? + ~21 + ~21 = ? minutes
+% train intro + 2 phase 1 rounds + imagery intro + 2 phase 2 rounds
+%  ? + ~21 + ? + ~21 = ? minutes
 
 % % INTRO
 SUBJECT = 999;

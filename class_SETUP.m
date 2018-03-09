@@ -163,5 +163,5 @@ STILLDURATION = 6 * SPEED;
 CONGRATSDURATION = 3*SPEED;
 INSTANT = 0.001;
 
-STILLREMINDER = ['The scan is now starting.\n\nMoving your head even a little blurs the image, so '...
+STILLREMINDER = ['The scan is now starting.\n\n Moving your head even a little blurs the image, so '...
     'please try to keep your head totally still until the scanning noise stops.\n\n Do it for science!'];

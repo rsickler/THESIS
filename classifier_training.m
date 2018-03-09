@@ -40,9 +40,12 @@ middle_dir = ['MIDDLE PERSON'];
 
 %% start screen
 instruct = ['Would you like to start?' ...
-    '\n\n-- press "space" to begin --'];
-displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-stim.StartTime = waitForKeyboard(trigger,device);
+    '\n\n\n\n -- move the joystick RIGHT to begin --'];
+DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('Flip',mainWindow, INSTANT);
+WaitSecs(5); 
+x = 0; 
+while (x < .75) x=axis(joy, 1); end
 instruct = ['Loading Scanner...'];
 displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 
@@ -227,10 +230,13 @@ save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim','timing','round_sequence','X','
     'train_responses','digitAcc','class_ratio');
 
 %present closing screen
-instruct = ['That completes the current round! You may now take a brief break before the next round. Press enter when you are ready to continue.' ...
-    '\n\n\n\n -- press "space" to continue --'];
+instruct = ['That completes the current round! You may now take a brief break before the next round. 
+    '\n\n\n\n -- move the joystick RIGHT to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
-end_press = waitForKeyboard(trigger,device);
+WaitSecs(5); 
+x = 0; 
+while (x < .75) x=axis(joy, 1); end
+
 
 end

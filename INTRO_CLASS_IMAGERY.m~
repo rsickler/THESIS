@@ -12,12 +12,6 @@ v_pic_size = windowSize.pixels*.75;
 v_RESCALE_FACTOR = v_pic_size./v_PICDIMS;
 v_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (v_PICDIMS(HORIZONTAL)*v_RESCALE_FACTOR(HORIZONTAL))/2;
 v_topLeft(VERTICAL) = v_picRow - (v_PICDIMS(VERTICAL)*v_RESCALE_FACTOR(VERTICAL))/2;
-%save intro data
-matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' num2str(ROUND) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
-data_dir = fullfile(workingDir, 'BehavioralData');
-if ~exist(data_dir,'dir'), mkdir(data_dir); end
-ppt_dir = [data_dir filesep SUBJ_NAME filesep];
-if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 
 
 % present experiment summary
@@ -88,10 +82,7 @@ x = 0;
 while (x < .75) x=axis(joy, 1); end
 
 %end screen
-instruct = ['That completes the intro! Remember, you will be IMAGINING moving the joystick during the "Go" phase now instead, '
-    'and you should close/open your eyes to the sound of the beep. You should only move the joystick when reporting your imagery feedback ' ...
-    'NOT while doing the mental imagery! '...
-    '\n\n You may now take a brief break before beginning the next round. Move right when you are ready to begin.' ...
+instruct = ['That completes the intro! Remember, you will be conduYou may now take a brief break before beginning the first round. Move right when you are ready to begin.' ...
     '\n\n\n\n -- move the joystick RIGHT to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
@@ -99,6 +90,13 @@ WaitSecs(5);
 x = 0; 
 while x < .75 x=axis(joy, 1); end
 
+
+%save intro data
+matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' num2str(ROUND) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+data_dir = fullfile(workingDir, 'BehavioralData');
+if ~exist(data_dir,'dir'), mkdir(data_dir); end
+ppt_dir = [data_dir filesep SUBJ_NAME filesep];
+if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 
 total_time = GetSecs - start_time;
 save([ppt_dir matlabSaveFile],'SUBJ_NAME','total_time');  

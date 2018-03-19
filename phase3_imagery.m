@@ -267,24 +267,24 @@ while trial <= N_images
     timing.actualOnsets.vividness(trial) = Screen('Flip',mainWindow,timespec);
     %record vividness input
     tEnd=GetSecs+stim.vividnessDuration;
-% %     while GetSecs<tEnd
-% %         x=axis(joy, 1);
-% %         y=axis(joy, 2);
-% %     end
-% %     X(trial) = x;
-% %     Y(trial) = y; 
-%     %record imagery rating
-%     if (x>=-.75)&&(x<=.75) && (y>=.75); %DOWN FOR NOT VIVID AT ALL
-%         vividness{trial} = 'NOT VIVID AT ALL';
-%     elseif (x<=-.75) && (y>=-.75)&&(y<=.75); %LEFT FOR SOMEWHAT VIVID
-%         vividness{trial} = 'SOMEWHAT VIVID';
-%     elseif (x>=-.75)&&(x<=.75) && (y<=-.75) % UP FOR FAIRLY VIVID
-%         vividness{trial} = 'FAIRLY VIVID';
-%     elseif (x>=.75) && (y>=-.75)&&(y<=.75) % RIGHT FOR VERY VIVID
-%         vividness{trial} = 'VERY VIVID';
-%     else
-%         vividness{trial} = 'UNCLEAR'; % if not in any region, saved as unclear
-%     end    
+    while GetSecs<tEnd
+        x=axis(joy, 1);
+        y=axis(joy, 2);
+    end
+    X(trial) = x;
+    Y(trial) = y; 
+    record imagery rating
+    if (x>=-.75)&&(x<=.75) && (y>=.75); %DOWN FOR NOT VIVID AT ALL
+        vividness{trial} = 'NOT VIVID AT ALL';
+    elseif (x<=-.75) && (y>=-.75)&&(y<=.75); %LEFT FOR SOMEWHAT VIVID
+        vividness{trial} = 'SOMEWHAT VIVID';
+    elseif (x>=-.75)&&(x<=.75) && (y<=-.75) % UP FOR FAIRLY VIVID
+        vividness{trial} = 'FAIRLY VIVID';
+    elseif (x>=.75) && (y>=-.75)&&(y<=.75) % RIGHT FOR VERY VIVID
+        vividness{trial} = 'VERY VIVID';
+    else
+        vividness{trial} = 'UNCLEAR'; % if not in any region, saved as unclear
+    end    
     %update trial
     trial= trial+1;
 end

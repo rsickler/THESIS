@@ -36,7 +36,7 @@ instruct = ['These three response options are:'...
     '\n  2.    Hit the ball towards the middle defender.' ...
     '\n  3.    Hit the ball towards the rightmost defender.'...
     '\n\n The joystick movements associated with each of these three options are shown below.'];
-DrawFormattedText(mainWindow,instruct,intro_textRow,intro_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,intro_textRow,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('DrawTexture', mainWindow,class_intro_texture,[0 0 intro_PICDIMS],[intro_topLeft intro_topLeft+intro_PICDIMS.*intro_RESCALE_FACTOR]);
 cont = ['-- move the joystick RIGHT to continue --'];
 DrawFormattedText(mainWindow,cont,'center',cont_textRow,COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -96,7 +96,7 @@ while x < .75 x=axis(joy, 1); end
 
 % 1. no blocker right- hit left
 instruct = ['Try hitting toward the leftmost person! '...
-   '\n (Hint: move joystick all the way forward and to the left)']; 
+   '\n (Hint: move joystick all the way straight to the left)']; 
 DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, scenario_texture, [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
@@ -105,7 +105,7 @@ good = 'Good!';
 while ~done 
     x=axis(joy, 1);
     y=axis(joy, 2);
-    goal = (x<=-.75) && (y<=-.75); %full diagnal line
+    goal = (x<=-.75);
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -126,7 +126,7 @@ good = 'Good!';
 while ~done 
     x=axis(joy, 1);
     y=axis(joy, 2);
-    goal = (y<=-.75) && (x>=-.75)&&(x<=.75); %full straight
+    goal = (y<=-.5) && (x>=-.75)&&(x<=.75); %full straight
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -138,7 +138,7 @@ WaitSecs(2);
 
 % 3. no blocker right- hit right
 instruct = ['Try hitting toward the rightmost person. '...
-   '\n (Hint: move joystick all the way forward and to the right)']; 
+   '\n (Hint: move joystick all the way straight to the right)']; 
 DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, scenario_texture, [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);
 Screen('Flip',mainWindow, INSTANT);
@@ -147,9 +147,7 @@ good = 'Good!';
 while ~done 
     x=axis(joy, 1);
     y=axis(joy, 2);
-    %switch diagnal movements if antenna on right side
-    x = -x;
-    goal = (x<=-.75) && (y<=-.75); %full diagnal line
+    goal = (x>=.75);
     if goal
         done = 1; 
         DrawFormattedText(mainWindow,good,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);

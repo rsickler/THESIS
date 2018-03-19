@@ -10,6 +10,7 @@ SETUP;
 instruct = 'Loading Phase 3...';
 displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
 
+
 % PSEUDO-RANDOMIZE
 %pseudorandomize all originals and variants in blocks of 4, using all 16
 % images twice each
@@ -79,12 +80,7 @@ stimuliFolder = fullfile(workingDir, 'stimuli');
 noresponse_matrix = double(imread(fullfile(stimuliFolder,'noresponse.jpeg')));
 noresponse_texture = Screen('MakeTexture', mainWindow, noresponse_matrix);
 
-%BEGIN PHASE 3
-% give instructions, wait to begin
-instruct = ['Would you like to start phase 3?' ...
-    '\n\n-- press "space" to begin --'];
-displayText(mainWindow,instruct,INSTANT, 'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-stim.p3StartTime = waitForKeyboard(trigger,device);
+
 % create structure for storing responses
 P3_order = scenario_sequence;
 P3_response = {};

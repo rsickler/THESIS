@@ -48,7 +48,7 @@ InitializePsychSound(1);
 freq = 44100;
 nrchannels = 1;
 beep_time = 0.25; 
-snddata = MakeBeep(378, duration, freq);
+snddata = MakeBeep(378, beep_time, freq);
 pahandle = PsychPortAudio('Open', [], [], [], freq, nrchannels);
 PsychPortAudio('FillBuffer', pahandle, snddata);
 
@@ -122,6 +122,8 @@ end
 %% PRESENT DIRECTED IMAGERY SCENARIOS
 trial = 1;
 vividness = {}; 
+X = []; 
+Y = []; 
 
 while trial <= length(scenario_sequence)
     % calculate all future onsets
@@ -189,17 +191,19 @@ while trial <= length(scenario_sequence)
         x=axis(joy, 1);
         y=axis(joy, 2);
     end
+    X(trial) = x;
+    Y(trial) = y; 
     %record imagery rating
     if (x>=-.75)&&(x<=.75) && (y>=.75); %DOWN FOR NOT VIVID AT ALL
         vividness{trial} = 'NOT VIVID AT ALL';
     elseif (x<=-.75) && (y>=-.75)&&(y<=.75); %LEFT FOR SOMEWHAT VIVID
         vividness{trial} = 'SOMEWHAT VIVID';
-    elseif (x>=-.75)&&(x<=.75) && (y>=.75) % UP FOR FAIRLY VIVID
+    elseif (x>=-.75)&&(x<=.75) && (y<=-.75) % UP FOR FAIRLY VIVID
         vividness{trial} = 'FAIRLY VIVID';
     elseif (x>=.75) && (y>=-.75)&&(y<=.75) % RIGHT FOR VERY VIVID
         vividness{trial} = 'VERY VIVID';
     else
-        vividness{trial} = 'UNCLEAR'; % RIGHT FOR VERY VIVID
+        vividness{trial} = 'UNCLEAR'; % if not in any region, saved as unclear
     end    
     % pre-math ISI
     if CURRENTLY_ONLINE
@@ -231,7 +235,7 @@ WaitSecs(10);
 PsychPortAudio('Close', pahandle);
 
 % save final variables
-save([ppt_dir matlabSaveFile], 'stim', 'timing', 'scenario_sequence','digitAcc');
+save([ppt_dir matlabSaveFile], 'stim', 'timing', 'scenario_sequence','digitAcc', 'vividness','X','Y');
 
 %present closing screen
 if ROUND == 2

@@ -69,7 +69,7 @@ end
 TRIGGER_keycode = keys.code;
 
 % fixation period for 20 s
-if CURRENTLY_ONLINE && ROUND <=1
+if CURRENTLY_ONLINE
     [timing.trig.wait, timing.trig.waitSuccess] = WaitTRPulse(TRIGGER_keycode,device);
     runStart = timing.trig.wait;
     displayText(mainWindow,STILLREMINDER,STILLDURATION,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -166,11 +166,11 @@ while trial <= length(scenario_sequence)
     %make sure did correct movement
     this_pic = scenario_sequence{trial};
     if this_pic(2) == 'L' %if left
-        correct_movement = (x<=-.75) && (y<=-.75); %hit left
+        correct_movement = (x<=-.6); %hit left
     elseif this_pic(2) == 'M' %if middle
-        correct_movement = (y<=-.75) && (x>=-.75)&&(x<=.75); %hit straight
+        correct_movement = (y<=-.5) && (x>=-.6)&&(x<=.6); %hit straight
     else %if right
-        correct_movement = (x>=.75) && (y<=-.75); %hit right
+        correct_movement = (x>=.6); %hit right
     end
     %feedback
     if CURRENTLY_ONLINE
@@ -230,7 +230,7 @@ save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim','timing','round_sequence','X','
     'train_responses','digitAcc','class_ratio');
 
 %present closing screen
-instruct = ['That completes the current round! You may now take a brief break before the next round. 
+instruct = ['That completes the current round! You may now take a brief break before the next round.'...
     '\n\n\n\n -- move the joystick RIGHT to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);

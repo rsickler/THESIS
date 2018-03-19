@@ -83,7 +83,7 @@ s_RESCALE_FACTOR = pic_size./s_PICDIMS;
 s_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (s_PICDIMS(HORIZONTAL)*s_RESCALE_FACTOR(HORIZONTAL))/2;
 s_topLeft(VERTICAL) = stim.picRow - (s_PICDIMS(VERTICAL)*s_RESCALE_FACTOR(VERTICAL))/2;
 %incorrect response photo
-INC_PICDIMS = [400 400];
+INC_PICDIMS = [500 375];
 INC_RESCALE_FACTOR = pic_size./INC_PICDIMS;
 INC_topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (INC_PICDIMS(HORIZONTAL)*INC_RESCALE_FACTOR(HORIZONTAL))/2;
 INC_topLeft(VERTICAL) = stim.picRow - (INC_PICDIMS(VERTICAL)*INC_RESCALE_FACTOR(VERTICAL))/2;
@@ -154,7 +154,6 @@ config.nTRs.math = stim.mathDuration/stim.TRlength;
 config.nTrials = 24;
 config.nTRs.perTrial =  config.nTRs.ISI + config.nTRs.scenario + config.nTRs.go + config.nTRs.feedback + config.nTRs.mathISI + config.nTRs.math;
 config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
-
 
 % FMRI JUNK
 % timing constants

@@ -1,7 +1,7 @@
 % debug conditions
 debugging = false;
 joystick = true;
-running = 17;
+running = 1;
 SPEED = 1;
 
 % setting up your subject's folder
@@ -12,7 +12,7 @@ elseif running == 18
 else workingDir = '/Users/treysickler/Documents/MATLAB/THESIS';
 end
 
-DEBUG_MONITOR_SIZE = [2560 1600]/4;
+DEBUG_MONITOR_SIZE = [2560 1600]/8;
 
 % SETTING WINDOW/DISPLAY
 DEFAULT_MONITOR_SIZE = [1024 768];
@@ -50,7 +50,7 @@ if debugging
     windowSize.pixels = DEBUG_MONITOR_SIZE;
 else
     HideCursor;
-    windowSize.pixels = [resolution.width resolution.height];
+    windowSize.pixels = [resolution.width resolution.height]/2;
 end
 [mainWindow, null] = Screen('OpenWindow',screenNumber,COLORS.BGCOLOR,[0 0 windowSize.pixels]);
 ifi = Screen('GetFlipInterval', mainWindow);

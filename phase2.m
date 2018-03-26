@@ -225,8 +225,6 @@ timing.plannedOnsets.lastITI = timing.plannedOnsets.feedback(end) + config.nTRs.
 timespec = timing.plannedOnsets.lastITI-slack;
 timing.actualOnset.finalITI = start_time_func(mainWindow,'+','center',COLORS.BLACK,WRAPCHARS,timespec);
 WaitSecs(2);
-displayText(mainWindow,'all done! hurray!',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-WaitSecs(2);
 
 %SET UP SUBJECT DATA
 % matlab save file

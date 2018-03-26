@@ -273,7 +273,7 @@ while trial <= N_images
     end
     X(trial) = x;
     Y(trial) = y; 
-    record imagery rating
+%    record imagery rating
     if (x>=-.75)&&(x<=.75) && (y>=.75); %DOWN FOR NOT VIVID AT ALL
         vividness{trial} = 'NOT VIVID AT ALL';
     elseif (x<=-.75) && (y>=-.75)&&(y<=.75); %LEFT FOR SOMEWHAT VIVID

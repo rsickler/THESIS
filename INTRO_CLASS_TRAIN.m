@@ -137,7 +137,7 @@ end
 WaitSecs(2); 
 
 % 3. no blocker right- hit right
-instruct = ['Try hitting toward the rightmost person. '...
+instruct = ['Try hitting toward the rightmost person! '...
    '\n (Hint: move joystick all the way straight to the right)']; 
 DrawFormattedText(mainWindow,instruct,'center',stim.textRow,COLORS.MAINFONTCOLOR,WRAPCHARS*1.5);
 Screen('DrawTexture', mainWindow, scenario_texture, [0 0 s_PICDIMS],[s_topLeft s_topLeft+s_PICDIMS.*s_RESCALE_FACTOR]);

@@ -5,7 +5,8 @@
 function phase3_distractor(SUBJECT,SUBJ_NAME,SESSION)
 SETUP; 
 instruct = 'Loading Phase 3...';
-displayText(mainWindow, instruct, INSTANT, 'center',COLORS.MAINFONTCOLOR, WRAPCHARS);
+DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+Screen('Flip',mainWindow, INSTANT);
 
 % matlab save file
 matlabSaveFile = ['DATA_' num2str(SUBJECT) '_' num2str(SESSION) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
@@ -14,85 +15,69 @@ if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
 
-%set button presses to for feedback
-ONE = '1';
-TWO = '2';
-KEYS = [ONE TWO];
-keyCell = {ONE, TWO};
-cresp = keyCell(1:2); 
-digits_keys = keyCell;
-allkeys = KEYS;
-% define key names
-for i = 1:length(allkeys)
-    keys.code(i,:) = getKeys(allkeys(i));
-    keys.map(i,:) = zeros(1,256);
-    keys.map(i,keys.code(i,:)) = 1;
-end
-
-%make maps
-digits_map = sum(keys.map([1:2],:)); 
-digits_scale = makeMap({'even','odd'},[0 1],keyCell([1 2]));
-cond_map = makeMap({'even', 'odd'});
-
 % GIVE INTRO
 %explanation of task 
-instruct = ['you will be performing addition of three numbers'...
+instruct = ['In this part of the experiment, you will be performing a numbers task '...
+    'comprised of adding three numbers to determine whether their sum is odd or even. '...
+    'Each time, you will be presented with three numbers on the screen and have 4 seconds to determine your answer.'...
+    '\n\n  If the sum is odd, you should move the joystick to the LEFT. \n If the sum is even, you should move the joystick to the RIGHT.'...
+    '\n Make sure to submit your answer before the 4 seconds are up! '...
     '\n\n-- press "space" to continue --'];
+
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 press1 = waitForKeyboard(trigger,device);
 
 
-% SET UP PRECISE TIMING 
-digits_promptDur = 4*SPEED; % length digits on screen
-digits_isi = 0*SPEED; % length ISI
-digits_listenDur = 0;
-digits_triggerNext = false; 
-runStart = GetSecs;
-
-% initialize structure
-digitsEK = initEasyKeys(['phase3_distractor' '_SUB'], SUBJ_NAME,ppt_dir, ...
-    'default_respmap', digits_scale, ...
-    'condmap', cond_map, ...
-    'trigger_next', digits_triggerNext, ...
-    'prompt_dur', digits_promptDur, ...
-    'listen_dur', digits_listenDur, ...
-    'exp_onset', runStart, ...
-    'console', false, ...
-    'device', -1);
-digitsEK = startSession(digitsEK); 
-
-%% RUN TRIALS
-
-% 5 rounds of 3 problems each
-num_rounds = 5; 
+%% SET UP MATH
 num_qs = 3;
+digits_promptDur = 4*SPEED; % length digits on screen
+digits_isi = 0*SPEED; 
+stim.mathISIDuration = 2*SPEED;
+stim.mathDuration = 12*SPEED;
+config.TR = stim.TRlength;
+config.nTRs.mathISI = stim.mathISIDuration/stim.TRlength;
+config.nTRs.math = stim.mathDuration/stim.TRlength;
+config.nTrials = 32;
+config.nTRs.perTrial = config.nTRs.mathISI + config.nTRs.math;
+config.nTRs.perBlock = (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
 
-for round = 1:num_rounds
-    start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,INSTANT);
-    WaitSecs(2);
-    [digitAcc(round), digitRT(round), actualOnsets(round)] ...
-    = odd_even(digitsEK,num_qs,digits_promptDur,digits_isi,mainWindow, ...
-    keyCell([1 2]),COLORS,device,SUBJ_NAME,[SESSION round],slack,INSTANT, keys);
+%% run trials
+trial = 1; 
+runStart = GetSecs;
+while trial <= config.nTrials
+    %set timings
+    timing.plannedOnsets.mathISI(trial) = runStart;
+    if trial > 1
+        timing.plannedOnsets.mathISI(trial) = timing.plannedOnsets.mathISI(trial-1) + config.nTRs.perTrial*config.TR;
+    end
+    timing.plannedOnsets.math(trial) = timing.plannedOnsets.mathISI(trial) + config.nTRs.mathISI*config.TR;
+    % pre-math ISI
+    timespec = timing.plannedOnsets.mathISI(trial)-slack;
+    timing.actualOnsets.mathISI(trial) = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
+    % DO MATH- 1 round of 3 problems
+    timespec = timing.plannedOnsets.math(trial)-slack;
+    [digitAcc(trial), timing.actualOnsets.math(trial)] ...
+        = odd_even_joy(num_qs,digits_promptDur,digits_isi,mainWindow,stim.textRow, ...
+        COLORS,device,slack,timespec);
+    %update trial
+    trial= trial+1;
 end
+% throw up a final ISI
+timing.plannedOnsets.lastISI = timing.plannedOnsets.math(end) + config.nTRs.math*config.TR;
+timespec = timing.plannedOnsets.lastISI-slack;
+timing.actualOnset.finalISI = start_time_func(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
+WaitSecs(2); 
 
 %% close up shop
-% put final 2s ISI
-displayText(mainWindow,'+',INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-WaitSecs(2);
-
-% close the structure
-endSession(digitsEK);
-
 % save final variables
-save([ppt_dir matlabSaveFile], 'digitAcc','digitRT','actualOnsets');  
+save([ppt_dir matlabSaveFile], 'digitAcc','timing','config');  
 
 %present closing screen
-instruct = ['That completes the third phase! You may now take a brief break before phase four. Press enter when you are ready to continue.' ...
+instruct = ['That completes the third phase! You may now take a brief break before phase four. Press space when you are ready to continue.' ...
     '\n\n\n\n -- press "space" to continue --'];
 DrawFormattedText(mainWindow,instruct,'center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
 Screen('Flip',mainWindow, INSTANT);
 end_press = waitForKeyboard(trigger,device);
 
 end
-

@@ -226,7 +226,7 @@ end
 class_ratio = corrects / length(scenario_sequence);
 
 %save important variables
-save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim','timing','round_sequence','X','Y',...
+save([ppt_dir matlabSaveFile],'SUBJ_NAME','stim','timing','config','round_sequence','X','Y',...
     'train_responses','digitAcc','class_ratio');
 
 %present closing screen

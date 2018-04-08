@@ -1,6 +1,6 @@
 % debug conditions
-debugging = false;
-joystick = true;
+debugging = true;
+joystick = false;
 running = 1;
 SPEED = 1;
 

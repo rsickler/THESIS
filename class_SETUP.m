@@ -1,9 +1,9 @@
 % debug conditions
-debugging = false;
-joystick = true;
+debugging = true;
+joystick = false;
 running = 1;
 SPEED = 1;
-CURRENTLY_ONLINE = true; 
+CURRENTLY_ONLINE = false; 
 
 % setting up your subject's folder
 if running == 17
@@ -12,7 +12,6 @@ elseif running == 18
     workingDir = '/Users/norman_lab/THESIS';
 else workingDir = '/Users/treysickler/Documents/MATLAB/THESIS';
 end
-
 
 % SETTING WINDOW/DISPLAY
 DEBUG_MONITOR_SIZE = [2560 1600]/4;

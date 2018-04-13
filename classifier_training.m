@@ -2,7 +2,7 @@
 %%% DIRECTED real training on the scenarios, with even ratio of original:variant.
 % trial: 2s --> 4s --> 4s --> 2s -------> [2s --> 4s --> 4s -->4s] = 26 seconds
 % 1 round = 2 trials for all 12 images = 24 trials = 10.4 minutes
-% 624 seconds + 20 second delay + 10 second shut down = 654 sec = 327 TR
+% 624 seconds + 20 second strat delay + 10 second shut down = 654 sec = 327 TR
 
 function classifier_training(SUBJECT,SUBJ_NAME,SESSION,ROUND)
 

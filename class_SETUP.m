@@ -3,7 +3,7 @@ debugging = true;
 joystick = false;
 running = 1;
 SPEED = 1;
-CURRENTLY_ONLINE = false; 
+CURRENTLY_ONLINE = true; 
 
 % setting up your subject's folder
 if running == 17

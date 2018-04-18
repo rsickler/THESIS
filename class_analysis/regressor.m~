@@ -115,6 +115,7 @@ number_added1_2 = Lcorrect_totals1_2 - correct_totals1_2;
 % 1 round = 2 trials for all 12 images = 8 rights, 8 lefts, 8 middles  = 24 trials
 % 624 seconds + 20 second delay + 10 second shutdown = 654 sec = 327 TR
 % so when wait = correct, first 1O TR --> delay, last 5 --> shutdown
+
 TR_length = 2;
 TRwait_correct = 10;
 TRwait_incorrect = 0;
@@ -153,7 +154,7 @@ for i = 1:length(planned_GO_1_1)
     total_off2_2(i) = sum(off2_2{i});
 end
 
-%see where things actually start for training round 2 for subjects 1 + 2 
+%see where things actually start for trianing 1_2 for subjects 1 + 2 
 %answer ===== 1st TR!!!!!
 for i =1:4
     for j = 1:24
@@ -191,6 +192,27 @@ end
 for i = 3:4
     REG = zeros(3,TR_perRound);
     sequence = round_seq1_2{i};
+    TRs = TR_list_1_2{i};
+    for j = 1:length(sequence)
+        displayed = doTRs(j);
+        if sequence{j}(2) == 'L'
+            REG(1,displayed) = 1; % mark lefts (with delay + shift)
+            REG(1,displayed+1) = 1;
+        elseif sequence{j}(2) == 'M'
+            REG(2,displayed) = 1; % mark middles (with delay + shift)
+            REG(2,displayed+1) = 1;
+        elseif sequence{j}(2) == 'R'
+            REG(3,displayed) = 1; % mark rights (with dely + shift)
+            REG(3,displayed+1) = 1;
+        end
+    end
+    reg1_2{i} = REG;
+end
+
+% reg for 2nd round for subjects 1 and 2 (INCORRECT WAIT)
+for i = 3:4
+    REG = zeros(3,TR_perRound);
+    sequence = round_seq1_2{i};
     gos = planned_GO_1_2{i};
     for j = 1:length(sequence)
         if sequence{j}(2) == 'L'
@@ -207,26 +229,6 @@ for i = 3:4
     reg1_2{i} = REG;
 end
 
-% reg for 2nd round for subjects 1 and 2 (INCORRECT WAIT)
-for i = 1:2
-    REG = zeros(3,TR_perRound);
-    sequence = round_seq1_2{i};
-    TRs = TR_list_1_2{i};
-    for j = 1:length(sequence)
-        displayed = TRs{j};
-        if sequence{j}(2) == 'L'
-            REG(1,displayed +2) = 1; % mark lefts (with shift)
-            REG(1,displayed +2+1) = 1;
-        elseif sequence{j}(2) == 'M'
-            REG(2,displayed +2) = 1; % mark middles (with shift)
-            REG(2,displayed +2+1) = 1;
-        elseif sequence{j}(2) == 'R'
-            REG(3,displayed +2) = 1; % mark rights (with shift)
-            REG(3,displayed +2+1) = 1;
-        end
-    end
-    reg1_2{i} = REG;
-end
 
 %% build imagery regressors  (ignoring corrects / incorrects)
 
@@ -300,15 +302,7 @@ for i = 3:4
 end
 
 % selector for 2nd round for subjects 1 and 2 (INCORRECT WAIT)
-for i = 1:2
-    selector = zeros(1,TR_perRound);
-    TRs = TR_list_1_2{i};
-    for j = 0:nTR_perBlock
-        selector(1,1 +2 + j) = 1; % mark 1st round (with delay + shift)
-        selector(1,1 +2 + j + nTR_perBlock) = 2; % mark 2nd round (with delay + shift)
-    end
-    selector1_2{i} = selector;
-end
+
 
 %% IMAGERY  SELECTOR
 

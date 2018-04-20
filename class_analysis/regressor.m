@@ -304,8 +304,8 @@ for i = 1:2
     selector = zeros(1,TR_perRound);
     TRs = TR_list_1_2{i};
     for j = 0:nTR_perBlock
-        selector(1,1 +2 + j) = 1; % mark 1st round (with delay + shift)
-        selector(1,1 +2 + j + nTR_perBlock) = 2; % mark 2nd round (with delay + shift)
+        selector(1,1 +2 + j) = 3; % mark 1st round (with delay + shift)
+        selector(1,1 +2 + j + nTR_perBlock) = 4; % mark 2nd round (with delay + shift)
     end
     selector1_2{i} = selector;
 end

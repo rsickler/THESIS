@@ -10,11 +10,14 @@ p2_means = 100*[nv_Ao_mean2 v_Ao_mean2 ; ...
                 nv_Bo_mean2 v_Bo_mean2 ; ...
                 nv_Av_mean2 v_Av_mean2 ; ...
                 nv_Bv_mean2 v_Bv_mean2 ];
-        
+% convert to standard errors unique to the two group (n = 37 and 9)            
 p2_stds = 100*[nv_Ao_std2 v_Ao_std2 ; ...
                nv_Bo_std2 v_Bo_std2 ; ...
                nv_Av_std2 v_Av_std2 ; 
                nv_Bv_std2 v_Bv_std2 ];
+
+p2_stderror(:,1) = p2_stds(:,1) / sqrt(37); 
+p2_stderror(:,2) = p2_stds(:,2) / sqrt(9); 
 
 % Creating axes and the bar graph
 ax = axes;
@@ -34,7 +37,8 @@ ax.GridLineStyle = '-';
 
 % X and Y labels
 xlabel('Specific Scenario');
-ylabel('Mean P2 Percent Accuracy');
+ylabel('Mean Accuracy (%)');
+set(gca,'FontSize',18)
 
 % Creating a legend and placing it outside the bar plot
 lg = legend('Inexperienced','Experienced', 'AutoUpdate','off');
@@ -54,5 +58,5 @@ groupwidth = min(0.8, nbars/(nbars + 1.5));
 for i = 1:nbars
     % Calculate center of each bar
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
-    errorbar(x, p2_means(:,i), p2_stds(:,i), 'k', 'linestyle', 'none');
+    errorbar(x, p2_means(:,i), p2_stderror(:,i), 'k', 'linestyle', 'none');
 end

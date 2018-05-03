@@ -6,7 +6,7 @@ behav_analyzer;
 % Data to be plotted as a bar graph
 p4_means = 100*[p4_t_O_RATIO p4_t_V_RATIO; p4_i_O_RATIO p4_i_V_RATIO; p4_d_O_RATIO p4_d_V_RATIO ];
         
-p4_stds = 100*[p4_t_O_RATIO_STD p4_t_V_RATIO_STD; p4_i_O_RATIO_STD p4_i_V_RATIO_STD; p4_d_O_RATIO_STD p4_d_V_RATIO_STD]; 
+p4_stderror = 100*[p4_t_O_RATIO_STD p4_t_V_RATIO_STD; p4_i_O_RATIO_STD p4_i_V_RATIO_STD; p4_d_O_RATIO_STD p4_d_V_RATIO_STD] / 4; 
        
 % Creating axes and the bar graph
 ax = axes;
@@ -26,7 +26,8 @@ ax.GridLineStyle = '-';
 
 % X and Y labels
 xlabel('Experimental Group');
-ylabel('Mean Percent Accuracy');
+ylabel('Mean Accuracy (%)');
+set(gca,'FontSize',18)
 
 % Creating a legend and placing it outside the bar plot
 lg = legend('Originals','Variants','AutoUpdate','off');
@@ -46,5 +47,5 @@ groupwidth = min(0.8, nbars/(nbars + 1.5));
 for i = 1:nbars
     % Calculate center of each bar
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
-    errorbar(x, p4_means(:,i), p4_stds(:,i), 'k', 'linestyle', 'none');
+    errorbar(x, p4_means(:,i), p4_stderror(:,i), 'k', 'linestyle', 'none');
 end

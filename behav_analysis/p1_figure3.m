@@ -6,9 +6,9 @@ behav_analyzer;
 % Data to be plotted as a bar graph
 p1_means = 100*[p1_t_Aratio p1_i_Aratio p1_d_Aratio; ...
                 p1_t_Bratio p1_i_Bratio p1_d_Bratio];        
-            
-p1_stds = 100*[p1_t_Aratio_std p1_i_Aratio_std p1_d_Aratio_std; ...
-               p1_t_Bratio_std p1_i_Bratio_std p1_d_Bratio_std];
+% convert to standard error (sqrt(16))            
+p1_stderror = 100*[p1_t_Aratio_std p1_i_Aratio_std p1_d_Aratio_std; ...
+               p1_t_Bratio_std p1_i_Bratio_std p1_d_Bratio_std]/4;
            
 % Creating axes and the bar graph
 ax = axes;
@@ -29,7 +29,8 @@ ax.GridLineStyle = '-';
 
 % X and Y labels
 xlabel('Specific Scenario');
-ylabel('Mean Percent Accuracy');
+ylabel('Mean Accuracy (%)');
+set(gca,'FontSize',18)
 
 % Creating a legend and placing it outside the bar plot
 lg = legend('Continued Training','Mental Practice', 'Irrelevant Task', 'AutoUpdate','off');
@@ -49,5 +50,5 @@ groupwidth = min(0.8, nbars/(nbars + 1.5));
 for i = 1:nbars
     % Calculate center of each bar
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
-    errorbar(x, p1_means(:,i), p1_stds(:,i), 'k', 'linestyle', 'none');
+    errorbar(x, p1_means(:,i), p1_stderror(:,i), 'k', 'linestyle', 'none');
 end

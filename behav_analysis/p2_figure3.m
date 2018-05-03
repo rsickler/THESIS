@@ -19,10 +19,10 @@ p2_means = 100*[mean_all_Ao; ...
                 mean_all_Av; ...
                 mean_all_Bv];
         
-p2_stds = 100*[std_all_Ao; ...
+p2_stderror = 100*[std_all_Ao; ...
                std_all_Bo; ...
                std_all_Av; 
-               std_all_Bv];
+               std_all_Bv] / 4;
 
 % Creating axes and the bar graph
 ax = axes;
@@ -40,7 +40,8 @@ ax.GridLineStyle = '-';
 
 % X and Y labels
 xlabel('Specific Scenario');
-ylabel('Mean Percent Accuracy');
+ylabel('Mean Accuracy (%)');
+set(gca,'FontSize',18)
 
 hold on;
 
@@ -55,5 +56,5 @@ groupwidth = min(0.8, nbars/(nbars + 1.5));
 for i = 1:nbars
     % Calculate center of each bar
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
-    errorbar(x, p2_means(:,i), p2_stds(:,i), 'k', 'linestyle', 'none');
+    errorbar(x, p2_means(:,i), p2_stderror(:,i), 'k', 'linestyle', 'none');
 end

@@ -1,16 +1,22 @@
 % COMPARES MEAN GO GO ACCURACIES FOR ALL 3 MASKS
 class_analyzer; 
+set(findall(gcf,'-property','FontSize'),'FontSize',18)
+
 
 % Data to be plotted as a bar graph
-go_go_means = 100*[go_go_MI; ...
+go_go_means = 100*[go_go_PM; ...
+                go_go_PS; ...
                 go_go_SM; ...
+                go_go_MP; ...
+                go_go_MI; ...
+                go_go_WB; ...
                 go_go_AM];
         
 % Creating axes and the bar graph
 ax = axes;
 h = bar(go_go_means,'BarWidth',1);
-xt={'MI' ; 'SMA' ; 'AM'}; 
-set(gca,'xtick',1:3); 
+xt={'PM';'PS';'SM';'MP';'MI';'WB';'AM'}; 
+set(gca,'xtick',1:7); 
 set(gca,'xticklabel',xt);
 ylim([0 100]);
 
@@ -49,6 +55,6 @@ for i = 1:nbars
 end
 
 % add chance classification line
-x2 = [0 4];
+x2 = [0 8];
 y2 = [100/3 100/3];
 line(x2,y2,'Color','red','LineStyle','--')

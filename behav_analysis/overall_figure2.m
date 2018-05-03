@@ -33,7 +33,8 @@ ax.GridLineStyle = '-';
 
 % X and Y labels
 xlabel('Experimental Phase');
-ylabel('Mean Percent Accuracy (Variants)');
+ylabel('Mean Varaints Accuracy (%)');
+set(gca,'FontSize',18)
 
 % Creating a legend and placing it outside the bar plot
 lg = legend('Continued Training','Mental Practice', 'Irrelevant Task', 'AutoUpdate','off');

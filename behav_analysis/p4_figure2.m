@@ -9,10 +9,10 @@ p4_means = 100*[p4_t_Ao_ratio p4_i_Ao_ratio p4_d_Ao_ratio; ...
                 p4_t_Av_ratio p4_i_Av_ratio p4_d_Av_ratio; ...
                 p4_t_Bv_ratio p4_i_Bv_ratio p4_d_Bv_ratio];
         
-p4_stds = 100*[p4_t_Ao_ratio_std p4_i_Ao_ratio_std p4_d_Ao_ratio_std; ...
+p4_stderror = 100*[p4_t_Ao_ratio_std p4_i_Ao_ratio_std p4_d_Ao_ratio_std; ...
                p4_t_Bo_ratio_std p4_i_Bo_ratio_std p4_d_Bo_ratio_std; ...
                p4_t_Av_ratio_std p4_i_Av_ratio_std p4_d_Av_ratio_std; 
-               p4_t_Bv_ratio_std p4_i_Bv_ratio_std p4_d_Bv_ratio_std];
+               p4_t_Bv_ratio_std p4_i_Bv_ratio_std p4_d_Bv_ratio_std] / 4;
 
 % Creating axes and the bar graph
 ax = axes;
@@ -33,7 +33,8 @@ ax.GridLineStyle = '-';
 
 % X and Y labels
 xlabel('Specific Scenario');
-ylabel('Mean Percent Accuracy');
+ylabel('Mean Accuracy (%)');
+set(gca,'FontSize',18)
 
 % Creating a legend and placing it outside the bar plot
 lg = legend('Continued Training','Mental Practice', 'Irrelevant Task', 'AutoUpdate','off');
@@ -53,5 +54,5 @@ groupwidth = min(0.8, nbars/(nbars + 1.5));
 for i = 1:nbars
     % Calculate center of each bar
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
-    errorbar(x, p4_means(:,i), p4_stds(:,i), 'k', 'linestyle', 'none');
+    errorbar(x, p4_means(:,i), p4_stderror(:,i), 'k', 'linestyle', 'none');
 end

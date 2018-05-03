@@ -27,7 +27,9 @@ legend('Subjects', text, 'Location', 'Northwest');
 
 % X and Y labels
 xlabel('Imagery Rating Score');
-ylabel('Mean Difference (P4-P2) in Originals Accuracy ');
+ylabel({'Mean Difference in Originals Accuracy (%)', '[P4-P2]'});
+set(gca,'FontSize',18)
+
 xlim([70 100]);
 ylim([-20 100]);
 

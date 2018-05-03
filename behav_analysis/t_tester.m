@@ -26,10 +26,12 @@ xv4 = v_Bv_ratio_t2;
 yv4 = nv_Bv_ratio_t2; 
 [hv4,pv4] = ttest2(xv4,yv4);
 
-%% t test for p3 training group
+%% t test for p4 final accuracies
 
-x3 = p2_t_V; 
-y3 = p3_t_V; 
-[h3,p3] = ttest2(x3,y3)
+X1 = p4_t_V; 
+Y1 = p4_d_V; 
+[H1,P1] = ttest2(X1,Y1);
 
-
+X2 = p4_i_V; 
+Y2 = p4_d_V; 
+[H2,P2] = ttest2(X2,Y2);

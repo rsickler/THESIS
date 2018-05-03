@@ -461,5 +461,3 @@ for i = 1:48
         impropers_outliers_p4 = impropers_outliers_p4+1;
     end
 end
-
-% check on the shitty outlier subjects from p1

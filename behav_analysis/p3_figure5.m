@@ -25,7 +25,7 @@ legend('Individual Subjects', text, 'Location', 'Northwest');
 %format figure
 
 % X and Y labels
-xlabel('Imagery Rating Score');
+xlabel('Math Task Accuracy (%)');
 ylabel({'Mean Difference in Originals Accuracy (%)', '[P4-P2]'});
 set(gca,'FontSize',18)
 xlim([70 100]);

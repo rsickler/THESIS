@@ -21,13 +21,13 @@ yFit = polyval(linearCoefficients, xFit);
 hold on;
 text = ['Linear Regression (R^2 = ' num2str(R2) ')']; 
 plot(xFit, yFit, 'b.-', 'MarkerSize', 10, 'LineWidth', 1);
-legend('Subjects', text, 'Location', 'Northwest');
+legend('Individual Subjects', text, 'Location', 'Northwest');
 
 %format figure
 
 % X and Y labels
 xlabel('Mean Imagery Rating Score');
-ylabel({'Mean Difference in Originals Accuracy (%)', '[P4-P2]'});
+ylabel({'Difference in Originals Accuracy (%)', '[P4-P2]'});
 set(gca,'FontSize',18)
 
 xlim([0 3]);

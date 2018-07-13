@@ -35,3 +35,12 @@ Y1 = p4_d_V;
 X2 = p4_i_V; 
 Y2 = p4_d_V; 
 [H2,P2] = ttest2(X2,Y2);
+
+%% t test for phase 2 across all individual scenario types
+
+a = Bv_ratio_t2.'; 
+b = Bv_ratio_i2.'; 
+c = Bv_ratio_d2.'; 
+y = cat(2, a, b,c);
+group = {'t','i','d'}; 
+[p1,~,stats] = anova1(y,group,'off');

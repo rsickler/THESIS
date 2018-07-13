@@ -375,6 +375,11 @@ experienced_i = [23 24 30 31];
 experienced_d = [37 39 40];
 
 
+
+
+
+
+
 %% p1 80% above percentage
 trial_counter = zeros(1,48);
 for i = 1:48

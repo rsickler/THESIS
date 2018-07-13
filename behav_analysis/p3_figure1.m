@@ -50,3 +50,17 @@ for i = 1:nbars
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
     errorbar(x, p3_means(:,i), p3_stderror(:,i), 'k', 'linestyle', 'none');
 end
+
+
+%% stats
+
+  
+A = p2_t_V.';
+B = p3_t_V.';
+C = p4_t_V.';
+y = cat(2, A, B,C);
+group = {'t','i','d'}; 
+[p1,~,stats] = anova1(y,group,'off');
+
+[h2,p2] = ttest(A,B); 
+[h3,p3] = ttest(B,C); 
